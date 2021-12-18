@@ -7,19 +7,16 @@ import { GRASS_GREEN, GRID_LINE_COLOR, GRID_SIZE, PLANE_THICKNESS, SKY_BLUE } fr
 import Building, { BuildingType } from './components/Building';
 
 function GamePage() {
-
-  const canvasRef = useRef();
-
   return (
     <React.Fragment>
-      <Canvas ref={canvasRef} shadows style={{ height: '100vh'}} camera={{ 
+      <Canvas shadows style={{ height: '100vh'}} camera={{ 
         rotation: [Math.PI / 6, 0, 0], 
         position: [0, 0 - (10 / Math.sqrt(3)), 10]
       }}>
-        {/* <CameraMover canvasRef={canvasRef} speed={0.5} /> */}
+        {/* <CameraMover speed={0.5} /> */}
         <color attach="background" args={[SKY_BLUE]} />
 
-        <ambientLight intensity={0.75} castShadow />
+        <ambientLight intensity={0.75} />
         <pointLight position={[15, 15, 25]} intensity={1.5} castShadow shadow-mapSize={[2048, 2048]} />
         {/* <directionalLight castShadow intensity={1.5} position={[10, 10, 10]} shadow-mapSize={[2048, 2048]}>
           <orthographicCamera attach="shadow-camera" left={-20} right={20} top={20} bottom={-20} />
@@ -27,7 +24,7 @@ function GamePage() {
 
         {/* Puts 0, 0 at the center of the bottom left square */}
         <gridHelper args={[GRID_SIZE, GRID_SIZE, GRID_LINE_COLOR, GRID_LINE_COLOR]} rotation={[Math.PI / 2, 0, 0]} position={[GRID_SIZE / 2 - 0.5, GRID_SIZE / 2 - 0.5, 0.01]} />
-        <Plane receiveShadow position={[GRID_SIZE / 2 - 0.5, GRID_SIZE / 2 - 0.5, -PLANE_THICKNESS / 2]} dimensions={[GRID_SIZE, GRID_SIZE, PLANE_THICKNESS]} color={GRASS_GREEN} />
+        <Plane position={[GRID_SIZE / 2 - 0.5, GRID_SIZE / 2 - 0.5, -PLANE_THICKNESS / 2]} dimensions={[GRID_SIZE, GRID_SIZE, PLANE_THICKNESS]} color={GRASS_GREEN} />
 
         <Building position={[1, 1]} type={BuildingType.NEXUS} />
         <Building position={[4, 1]} type={BuildingType.POWER_PLANT} />
