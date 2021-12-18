@@ -3,17 +3,16 @@ import React, { useCallback, useEffect, useState } from 'react';
 import { Canvas } from '@react-three/fiber';
 import Plane from './components/Plane';
 import CameraMover from './components/CameraMover';
-import { GRASS_GREEN, GRID_LINE_COLOR, GRID_SIZE, PLANE_THICKNESS, SKY_BLUE, locToId , buildConflict, keyToType, DEFAULT_TERRAIN } from './util';
+import { GRID_LINE_COLOR, GRID_SIZE, PLANE_THICKNESS, SKY_BLUE, locToId , buildConflict, keyToType, DEFAULT_TERRAIN, DEFAULT_BUILDING_TAKEN_SQUARES, DEFAULT_BUILDING_VISIBLE_SQUARES, computeNewBuildingVisibility } from './util';
 import Building, { BuildingType } from './components/Building';
 
 function GamePage() {
   const [buildings, setBuildings] = useState([
-    ...DEFAULT_TERRAIN, 
-    { position: [4, 4], type: BuildingType.REFINERY, friendly: false },
+    ...DEFAULT_TERRAIN
   ]);
 
-  const [takenSquares, setTakenSquares] = useState(new Set([[4, 4], [3, 4], [3, 5], [4, 5]].map(locToId)));
-
+  const [buildingTakenSquares, setBuildingTakenSquares] = useState(DEFAULT_BUILDING_TAKEN_SQUARES);
+  const [buildingVisibility, setBuildingVisibility] = useState(DEFAULT_BUILDING_VISIBLE_SQUARES);
   const [placingBuilding, setPlacingBuilding] = useState(null);
   const [hoverLocation, setHoverLocation] = useState([0, 0]);
 
@@ -29,15 +28,21 @@ function GamePage() {
 
   const onClick = (e) => {
     if (placingBuilding) {
-      if (!buildConflict(takenSquares, hoverLocation, placingBuilding)) {
-        const newTakenSquares = new Set([...takenSquares])
-
+      if (!buildConflict(buildingTakenSquares, hoverLocation, placingBuilding)) {
+        const newBuildingTakenSquares = new Set([...buildingTakenSquares])
+        const newBuildingVisibility = new Set([...buildingVisibility])
         switch (placingBuilding) {
           case BuildingType.NEXUS:
           case BuildingType.FARM:
             for (let x = -1; x <= 1; x++) {
               for (let y = -1; y <= 1; y++) {
-                newTakenSquares.add(locToId([hoverLocation[0] + x, hoverLocation[1] + y]));
+                newBuildingTakenSquares.add(locToId([hoverLocation[0] + x, hoverLocation[1] + y]));
+              }
+            }
+
+            for (let x = -4; x <= 4; x++) {
+              for (let y = -4; y <= 4; y++) {
+                newBuildingVisibility.add(locToId([hoverLocation[0] + x, hoverLocation[1] + y]));
               }
             }
             break;
@@ -47,19 +52,21 @@ function GamePage() {
           case BuildingType.TURRET:
             for (let x = -1; x <= 0; x++) {
               for (let y = 0; y <= 1; y++) {
-                newTakenSquares.add(locToId([hoverLocation[0] + x, hoverLocation[1] + y]));
+                newBuildingTakenSquares.add(locToId([hoverLocation[0] + x, hoverLocation[1] + y]));
               }
             }
             break;
           case BuildingType.WATCHTOWER:
-            newTakenSquares.add(locToId([hoverLocation[0], hoverLocation[1]]));
+            newBuildingTakenSquares.add(locToId([hoverLocation[0], hoverLocation[1]]));
             break;
           default:
             return;
         }
 
-        setTakenSquares(newTakenSquares);
-        setBuildings([...buildings, { position: hoverLocation, type: placingBuilding, friendly: true }]);
+        const newBuildings = [...buildings, { position: hoverLocation, type: placingBuilding, friendly: true }];
+        setBuildingTakenSquares(newBuildingTakenSquares);
+        setBuildingVisibility(computeNewBuildingVisibility(newBuildings, buildingVisibility));
+        setBuildings(newBuildings);
         setPlacingBuilding(null);
       }
     }
@@ -74,7 +81,7 @@ function GamePage() {
         rotation: [Math.PI / 6, 0, 0], 
         position: [0, 0 - (10 / Math.sqrt(3)), 10]
       }}>
-        <CameraMover speed={0.5} />
+        {/* <CameraMover speed={0.5} /> */}
         <color attach="background" args={[SKY_BLUE]} />
 
         <ambientLight intensity={0.75} />
@@ -84,13 +91,14 @@ function GamePage() {
         <gridHelper args={[GRID_SIZE, GRID_SIZE, GRID_LINE_COLOR, GRID_LINE_COLOR]} rotation={[Math.PI / 2, 0, 0]} position={[GRID_SIZE / 2 - 0.5, GRID_SIZE / 2 - 0.5, 0.01]} />
         <Plane 
           position={[GRID_SIZE / 2 - 0.5, GRID_SIZE / 2 - 0.5, -PLANE_THICKNESS / 2]} 
-          dimensions={[GRID_SIZE, GRID_SIZE, PLANE_THICKNESS]} color={GRASS_GREEN} 
+          dimensions={[GRID_SIZE, GRID_SIZE, PLANE_THICKNESS]}
+          visibility={buildingVisibility}
           selectionEnabled={placingBuilding === null}
           onCellHover={onCellHover}
           onClick={onClick}
         />
 
-        { placingBuilding && <Building showArea conflict={buildConflict(takenSquares, hoverLocation, placingBuilding)} pending={hoverLocation} type={placingBuilding} /> }
+        { placingBuilding && <Building showArea conflict={buildConflict(buildingTakenSquares, hoverLocation, placingBuilding)} pending={hoverLocation} type={placingBuilding} /> }
         { buildings.map(building => <Building showArea={placingBuilding} {...building} />) }
       </Canvas>
     </React.Fragment>

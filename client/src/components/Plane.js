@@ -1,13 +1,17 @@
 import React, { useRef, useState } from 'react';
+import { idToLoc } from '../util';
 
 const SELECTION_COLOR = '#264fcf';
+export const VISIBLE_TILE_COLOR = '#52a523';
+export const HIDDEN_TILE_COLOR = '#333333';
 
-export default function Plane({ dimensions, color, onCellHover, selectionEnabled, onClick, ...props }) {
+export default function Plane({ dimensions, visibility, onCellHover, selectionEnabled, onClick, ...props }) {
   const mesh = useRef();
   const selectionMesh = useRef();
 
   const [mouseDownLocation, setMouseDownLocation] = useState(null);
 
+  console.log(visibility)
   const handleClick = (e) => {
     if (onClick) {
       onClick(e);
@@ -54,12 +58,16 @@ export default function Plane({ dimensions, color, onCellHover, selectionEnabled
     <>
       <mesh {...props} receiveShadow ref={mesh} onClick={handleClick} onPointerDown={handleDown} onPointerUp={handleUp} onPointerMove={handleMove}>
         <boxGeometry args={dimensions} />
-        <meshStandardMaterial color={color} />
+        <meshStandardMaterial color={HIDDEN_TILE_COLOR} />
       </mesh>
       { selectionEnabled && <mesh receiveShadow position={[1,1,-1]} ref={selectionMesh}>
         <planeGeometry args={[1,1]} />
         <meshStandardMaterial color={SELECTION_COLOR}/>
       </mesh>}
+      {Array.from(visibility).map((id) => <mesh receiveShadow position={[...idToLoc(id), 0.005]}>
+        <planeGeometry args={[1,1]} />
+        <meshStandardMaterial color={VISIBLE_TILE_COLOR}/>
+      </mesh>)}
     </>
   )
 }
