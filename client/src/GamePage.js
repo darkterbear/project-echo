@@ -7,6 +7,14 @@ import { GRASS_GREEN, GRID_LINE_COLOR, GRID_SIZE, PLANE_THICKNESS, SKY_BLUE } fr
 import Building, { BuildingType } from './components/Building';
 
 function GamePage() {
+  const [buildings, setBuildings] = useState([
+    { position: [1, 1], type: BuildingType.NEXUS, friendly: true },
+    { position: [4, 1], type: BuildingType.FARM, friendly: true },
+    { position: [1, 4], type: BuildingType.REFINERY, friendly: true },
+
+    { position: [4, 4], type: BuildingType.NEXUS, friendly: false },
+  ]);
+
   const [placingBuilding, setPlacingBuilding] = useState(null);
   const [hoverLocation, setHoverLocation] = useState([0, 0]);
 
@@ -61,17 +69,7 @@ function GamePage() {
         />
 
         { placingBuilding && <Building showArea pending={hoverLocation} type={placingBuilding} /> }
-
-        <Building showArea={placingBuilding} position={[1, 1]} type={BuildingType.NEXUS} />
-        <Building showArea={placingBuilding} position={[4, 1]} type={BuildingType.POWER_PLANT} />
-        <Building showArea={placingBuilding} position={[1, 5]} type={BuildingType.FARM} />
-        <Building showArea={placingBuilding} position={[1, 7]} type={BuildingType.REFINERY} />
-        <Building showArea={placingBuilding} position={[1, 9]} type={BuildingType.TURRET} />
-
-        <Building showArea={placingBuilding} position={[5, 5]} type={BuildingType.FARM} friendly={false} />
-        <Building showArea={placingBuilding} position={[5, 8]} type={BuildingType.NEXUS} friendly={false} />
-        <Building showArea={placingBuilding} position={[6, 1]} type={BuildingType.BARRACKS} friendly={false} />
-        <Building showArea={placingBuilding} position={[8, 4]} type={BuildingType.WATCHTOWER} friendly={false} />
+        { buildings.map(building => <Building showArea={placingBuilding} {...building} />) }
       </Canvas>
     </React.Fragment>
   );
