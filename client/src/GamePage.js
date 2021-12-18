@@ -78,6 +78,44 @@ function GamePage() {
     setHoverLocation([x, y]);
   }
 
+  const onClick = (e) => {
+    if (placingBuilding) {
+      if (!buildConflict(takenSquares, hoverLocation, placingBuilding)) {
+        const newTakenSquares = new Set([...takenSquares])
+
+        switch (placingBuilding) {
+          case BuildingType.NEXUS:
+          case BuildingType.FARM:
+            for (let x = -1; x <= 1; x++) {
+              for (let y = -1; y <= 1; y++) {
+                newTakenSquares.add(locToId([hoverLocation[0] + x, hoverLocation[1] + y]));
+              }
+            }
+            break;
+          case BuildingType.POWER_PLANT:
+          case BuildingType.REFINERY:
+          case BuildingType.BARRACKS:
+          case BuildingType.TURRET:
+            for (let x = -1; x <= 0; x++) {
+              for (let y = 0; y <= 1; y++) {
+                newTakenSquares.add(locToId([hoverLocation[0] + x, hoverLocation[1] + y]));
+              }
+            }
+            break;
+          case BuildingType.WATCHTOWER:
+            newTakenSquares.add(locToId([hoverLocation[0], hoverLocation[1]]));
+            break;
+          default:
+            return;
+        }
+
+        setTakenSquares(newTakenSquares);
+        setBuildings([...buildings, { position: hoverLocation, type: placingBuilding, friendly: true }]);
+      }
+      setPlacingBuilding(null);
+    }
+  }
+
   return (
     <React.Fragment>
       <div id="info">
@@ -100,6 +138,7 @@ function GamePage() {
           dimensions={[GRID_SIZE, GRID_SIZE, PLANE_THICKNESS]} color={GRASS_GREEN} 
           selectionEnabled={placingBuilding === null}
           onCellHover={onCellHover}
+          onClick={onClick}
         />
 
         { placingBuilding && <Building showArea conflict={buildConflict(takenSquares, hoverLocation, placingBuilding)} pending={hoverLocation} type={placingBuilding} /> }

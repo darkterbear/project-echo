@@ -2,11 +2,17 @@ import React, { useRef, useState } from 'react';
 
 const SELECTION_COLOR = '#264fcf';
 
-export default function Plane({ dimensions, color, onCellHover, selectionEnabled, ...props }) {
+export default function Plane({ dimensions, color, onCellHover, selectionEnabled, onClick, ...props }) {
   const mesh = useRef();
   const selectionMesh = useRef();
 
   const [mouseDownLocation, setMouseDownLocation] = useState(null);
+
+  const handleClick = (e) => {
+    if (onClick) {
+      onClick(e);
+    }
+  }
 
   const handleDown = (e) => {
     e.stopPropagation();
@@ -46,7 +52,7 @@ export default function Plane({ dimensions, color, onCellHover, selectionEnabled
 
   return (
     <>
-      <mesh {...props} receiveShadow ref={mesh} onPointerDown={handleDown} onPointerUp={handleUp} onPointerMove={handleMove}>
+      <mesh {...props} receiveShadow ref={mesh} onClick={handleClick} onPointerDown={handleDown} onPointerUp={handleUp} onPointerMove={handleMove}>
         <boxGeometry args={dimensions} />
         <meshStandardMaterial color={color} />
       </mesh>
