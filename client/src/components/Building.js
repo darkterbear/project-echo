@@ -21,7 +21,7 @@ const PENDING_BUILDING_COLOR = '#527aff';
  * @param {BuildingType} type: enum describing type of building
  * @returns 
  */
-export default function Building({ type, position = [0,0,0], friendly = true, pending = null }) {
+export default function Building({ type, position = [0,0,0], friendly = true, pending = null, showArea }) {
   const mesh = useRef();
 
   useFrame((state) => {
@@ -41,6 +41,10 @@ export default function Building({ type, position = [0,0,0], friendly = true, pe
             <cylinderGeometry args={[0.7, 1, NEXUS_HEIGHT, 6]} />
             <meshStandardMaterial color={pending ? PENDING_BUILDING_COLOR : friendly ? LIGHT_BUILDING_COLOR : DARK_BUILDING_COLOR} />
           </mesh>
+          { showArea && <mesh receiveShadow position={[0, 0, 0.01]} >
+            <planeGeometry args={[3, 3]} />
+            <meshStandardMaterial color={pending ? PENDING_BUILDING_COLOR : friendly ? '#376e18' : '#555555'} />
+          </mesh>}
         </group>
       );
       case BuildingType.POWER_PLANT:
@@ -50,10 +54,13 @@ export default function Building({ type, position = [0,0,0], friendly = true, pe
               <cylinderGeometry args={[0.5, 0.5, 0.2, 32]} />
               <meshStandardMaterial color={pending ? PENDING_BUILDING_COLOR : friendly ? LIGHT_BUILDING_COLOR : DARK_BUILDING_COLOR} />
             </mesh>
+            { showArea && <mesh receiveShadow position={[-0.5, 0.5, 0.01]} >
+              <planeGeometry args={[2, 2]} />
+              <meshStandardMaterial color={pending ? PENDING_BUILDING_COLOR : friendly ? '#376e18' : '#555555'} />
+            </mesh> }
           </group>
         );
       case BuildingType.FARM:
-
         return (
           <group ref={mesh} position={[position[0], position[1], 0]}>
             {/* Fences */}
@@ -83,6 +90,11 @@ export default function Building({ type, position = [0,0,0], friendly = true, pe
               <boxGeometry args={[0.2, 0.3, 0.2]} />
               <meshStandardMaterial color={pending ? PENDING_BUILDING_COLOR : friendly ? LIGHT_BUILDING_COLOR : DARK_BUILDING_COLOR} />
             </mesh>
+
+            { showArea && <mesh receiveShadow position={[0, 0, 0.01]} >
+              <planeGeometry args={[3, 3]} />
+              <meshStandardMaterial color={pending ? PENDING_BUILDING_COLOR : friendly ? '#376e18' : '#555555'} />
+            </mesh>}
           </group>
         );
       case BuildingType.REFINERY:
@@ -96,6 +108,10 @@ export default function Building({ type, position = [0,0,0], friendly = true, pe
               <boxGeometry args={[1, 1, 0.2]} />
               <meshStandardMaterial color={pending ? PENDING_BUILDING_COLOR : friendly ? LIGHT_BUILDING_COLOR : DARK_BUILDING_COLOR} />
             </mesh>
+            { showArea && <mesh receiveShadow position={[-0.5, 0.5, 0.01]} >
+              <planeGeometry args={[2, 2]} />
+              <meshStandardMaterial color={pending ? PENDING_BUILDING_COLOR : friendly ? '#376e18' : '#555555'} />
+            </mesh>}
           </group>
         );
       case BuildingType.BARRACKS:
@@ -113,6 +129,10 @@ export default function Building({ type, position = [0,0,0], friendly = true, pe
               <cylinderGeometry args={[0.4 / 3, 0.4 / 3, 1, 3]} />
               <meshStandardMaterial color={pending ? PENDING_BUILDING_COLOR : friendly ? LIGHT_BUILDING_COLOR : DARK_BUILDING_COLOR} />
             </mesh>
+            { showArea && <mesh receiveShadow position={[-0.5, 0.5, 0.01]} >
+              <planeGeometry args={[2, 2]} />
+              <meshStandardMaterial color={pending ? PENDING_BUILDING_COLOR : friendly ? '#376e18' : '#555555'} />
+            </mesh>}
           </group>
         );
       case BuildingType.TURRET:
@@ -126,6 +146,10 @@ export default function Building({ type, position = [0,0,0], friendly = true, pe
               <boxGeometry args={[1, 0.1, 0.1]} />
               <meshStandardMaterial color={pending ? PENDING_BUILDING_COLOR : friendly ? LIGHT_BUILDING_COLOR : DARK_BUILDING_COLOR} />
             </mesh>
+            { showArea && <mesh receiveShadow position={[-0.5, 0.5, 0.01]} >
+              <planeGeometry args={[2, 2]} />
+              <meshStandardMaterial color={pending ? PENDING_BUILDING_COLOR : friendly ? '#376e18' : '#555555'} />
+            </mesh>}
           </group>
         );
       case BuildingType.WATCHTOWER:
@@ -135,6 +159,10 @@ export default function Building({ type, position = [0,0,0], friendly = true, pe
               <cylinderGeometry args={[0.1, 0.2, 1.5, 4]} />
               <meshStandardMaterial color={pending ? PENDING_BUILDING_COLOR : friendly ? LIGHT_BUILDING_COLOR : DARK_BUILDING_COLOR} />
             </mesh>
+            { showArea && <mesh receiveShadow position={[0, 0, 0.01]} >
+              <planeGeometry args={[1, 1]} />
+              <meshStandardMaterial color={pending ? PENDING_BUILDING_COLOR : friendly ? '#376e18' : '#555555'} />
+            </mesh>}
           </group>
         );
       default:

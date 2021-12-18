@@ -7,8 +7,6 @@ import { GRASS_GREEN, GRID_LINE_COLOR, GRID_SIZE, PLANE_THICKNESS, SKY_BLUE } fr
 import Building, { BuildingType } from './components/Building';
 
 function GamePage() {
-
-  const pendingBuilding = useRef();
   const [placingBuilding, setPlacingBuilding] = useState(null);
   const [hoverLocation, setHoverLocation] = useState([0, 0]);
 
@@ -65,18 +63,18 @@ function GamePage() {
           onCellHover={onCellHover}
         />
 
-        { placingBuilding && <Building pending={hoverLocation} type={placingBuilding} /> }
+        { placingBuilding && <Building showArea pending={hoverLocation} type={placingBuilding} /> }
 
-        <Building position={[1, 1]} type={BuildingType.NEXUS} />
-        <Building position={[4, 1]} type={BuildingType.POWER_PLANT} />
-        <Building position={[1, 5]} type={BuildingType.FARM} />
-        <Building position={[1, 7]} type={BuildingType.REFINERY} />
-        <Building position={[1, 9]} type={BuildingType.TURRET} />
+        <Building showArea={placingBuilding} position={[1, 1]} type={BuildingType.NEXUS} />
+        <Building showArea={placingBuilding} position={[4, 1]} type={BuildingType.POWER_PLANT} />
+        <Building showArea={placingBuilding} position={[1, 5]} type={BuildingType.FARM} />
+        <Building showArea={placingBuilding} position={[1, 7]} type={BuildingType.REFINERY} />
+        <Building showArea={placingBuilding} position={[1, 9]} type={BuildingType.TURRET} />
 
-        <Building position={[5, 5]} type={BuildingType.FARM} friendly={false} />
-        <Building position={[5, 8]} type={BuildingType.NEXUS} friendly={false} />
-        <Building position={[6, 1]} type={BuildingType.BARRACKS} friendly={false} />
-        <Building position={[8, 4]} type={BuildingType.WATCHTOWER} friendly={false} />
+        <Building showArea={placingBuilding} position={[5, 5]} type={BuildingType.FARM} friendly={false} />
+        <Building showArea={placingBuilding} position={[5, 8]} type={BuildingType.NEXUS} friendly={false} />
+        <Building showArea={placingBuilding} position={[6, 1]} type={BuildingType.BARRACKS} friendly={false} />
+        <Building showArea={placingBuilding} position={[8, 4]} type={BuildingType.WATCHTOWER} friendly={false} />
       </Canvas>
     </React.Fragment>
   );

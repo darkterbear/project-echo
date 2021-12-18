@@ -1,5 +1,4 @@
 import React, { useRef, useState } from 'react';
-import { DARK_GREEN, SKY_BLUE } from '../util';
 
 export default function Plane({ dimensions, color, onCellHover, ...props }) {
   const mesh = useRef();
@@ -12,7 +11,7 @@ export default function Plane({ dimensions, color, onCellHover, ...props }) {
     setMouseDownLocation(e.intersections[0].point);
     selectionMesh.current.scale.x = 0;
     selectionMesh.current.scale.y = 0;
-    selectionMesh.current.position.z = 0.01;
+    selectionMesh.current.position.z = 0.02;
   };
 
   const handleUp = (e) => {
