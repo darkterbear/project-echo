@@ -1,7 +1,7 @@
 import React, { useRef, useState } from 'react';
 import { DARK_GREEN, SKY_BLUE } from '../util';
 
-export default function Plane({ dimensions, color, ...props }) {
+export default function Plane({ dimensions, color, onCellHover, ...props }) {
   const mesh = useRef();
   const selectionMesh = useRef();
 
@@ -36,6 +36,10 @@ export default function Plane({ dimensions, color, ...props }) {
 
       selectionMesh.current.scale.x = e.intersections[0].point.x - mouseDownLocation.x;
       selectionMesh.current.scale.y = e.intersections[0].point.y - mouseDownLocation.y;
+    }
+
+    if (onCellHover) {
+      onCellHover(Math.round(e.intersections[0].point.x), Math.round(e.intersections[0].point.y));
     }
   };
 
