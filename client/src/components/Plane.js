@@ -1,6 +1,8 @@
 import React, { useRef, useState } from 'react';
 
-export default function Plane({ dimensions, color, onCellHover, ...props }) {
+const SELECTION_COLOR = '#264fcf';
+
+export default function Plane({ dimensions, color, onCellHover, selectionEnabled, ...props }) {
   const mesh = useRef();
   const selectionMesh = useRef();
 
@@ -48,10 +50,10 @@ export default function Plane({ dimensions, color, onCellHover, ...props }) {
         <boxGeometry args={dimensions} />
         <meshStandardMaterial color={color} />
       </mesh>
-      <mesh receiveShadow position={[1,1,-1]} ref={selectionMesh}>
+      { selectionEnabled && <mesh receiveShadow position={[1,1,-1]} ref={selectionMesh}>
         <planeGeometry args={[1,1]} />
-        <meshStandardMaterial color={'#264fcf'}/>
-      </mesh>
+        <meshStandardMaterial color={SELECTION_COLOR}/>
+      </mesh>}
     </>
   )
 }
