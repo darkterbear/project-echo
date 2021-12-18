@@ -3,12 +3,13 @@ import React, { useCallback, useEffect, useState } from 'react';
 import { Canvas } from '@react-three/fiber';
 import Plane from './components/Plane';
 import CameraMover from './components/CameraMover';
-import { GRASS_GREEN, GRID_LINE_COLOR, GRID_SIZE, PLANE_THICKNESS, SKY_BLUE, locToId , buildConflict, keyToType } from './util';
+import { GRASS_GREEN, GRID_LINE_COLOR, GRID_SIZE, PLANE_THICKNESS, SKY_BLUE, locToId , buildConflict, keyToType, DEFAULT_TERRAIN } from './util';
 import Building, { BuildingType } from './components/Building';
 
 function GamePage() {
   const [buildings, setBuildings] = useState([
-    { position: [4, 4], type: BuildingType.REFINERY, friendly: true },
+    ...DEFAULT_TERRAIN, 
+    { position: [4, 4], type: BuildingType.REFINERY, friendly: false },
   ]);
 
   const [takenSquares, setTakenSquares] = useState(new Set([[4, 4], [3, 4], [3, 5], [4, 5]].map(locToId)));
@@ -73,7 +74,7 @@ function GamePage() {
         rotation: [Math.PI / 6, 0, 0], 
         position: [0, 0 - (10 / Math.sqrt(3)), 10]
       }}>
-        {/* <CameraMover speed={0.5} /> */}
+        <CameraMover speed={0.5} />
         <color attach="background" args={[SKY_BLUE]} />
 
         <ambientLight intensity={0.75} />

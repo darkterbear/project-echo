@@ -9,14 +9,16 @@ export const BuildingType = {
   BARRACKS: 'barracks',
   TURRET: 'turret',
   WATCHTOWER: 'watchtower',
+  TERRAIN: 'terrain',
 };
 
-const LIGHT_BUILDING_COLOR = '#bbbbbb';
+const LIGHT_BUILDING_COLOR = '#527aff';
 const LIGHT_AREA_COLOR = '#376e18';
-const DARK_BUILDING_COLOR = '#333333';
+const DARK_BUILDING_COLOR = '#992020';
 const DARK_AREA_COLOR = '#555555';
-const PENDING_BUILDING_COLOR = '#527aff';
+const PENDING_BUILDING_COLOR = '#bbbbbb';
 const CONFLICT_COLOR = '#ff0000';
+const TERRAIN_COLOR = '#333333';
 
 /**
  * Three.js mesh component for a building.
@@ -171,6 +173,19 @@ export default function Building({ type, position = [0,0,0], friendly = true, pe
             </mesh>}
           </group>
         );
+        case BuildingType.TERRAIN:
+          return (
+            <group ref={mesh} position={[position[0], position[1], 0]}>
+              <mesh castShadow position={[0, 0, 0.75]} rotation={[Math.PI / 2, Math.PI / 4, 0]} >
+                <cylinderGeometry args={[0, Math.sqrt(18) / 2, 1.5, 4]} />
+                <meshStandardMaterial color={TERRAIN_COLOR} />
+              </mesh>
+              { showArea && <mesh receiveShadow position={[0, 0, areaZ]} >
+                <planeGeometry args={[3, 3]} />
+                <meshStandardMaterial color={TERRAIN_COLOR} />
+              </mesh>}
+            </group>
+          );
       default:
         return null;
   }

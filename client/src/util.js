@@ -8,6 +8,25 @@ export const DARK_GREEN = '#347436';
 export const PLANE_THICKNESS = 0.5;
 export const GRID_SIZE = 50;
 
+export const DEFAULT_TERRAIN = [
+  { position: [10, 22], type: BuildingType.TERRAIN, friendly: false },
+  { position: [13, 22], type: BuildingType.TERRAIN, friendly: false },
+  { position: [16, 22], type: BuildingType.TERRAIN, friendly: false },
+  { position: [22, 10], type: BuildingType.TERRAIN, friendly: false },
+  { position: [22, 13], type: BuildingType.TERRAIN, friendly: false },
+  { position: [22, 16], type: BuildingType.TERRAIN, friendly: false },
+
+  { position: [40, 28], type: BuildingType.TERRAIN, friendly: false },
+  { position: [37, 28], type: BuildingType.TERRAIN, friendly: false },
+  { position: [34, 28], type: BuildingType.TERRAIN, friendly: false },
+  { position: [28, 40], type: BuildingType.TERRAIN, friendly: false },
+  { position: [28, 37], type: BuildingType.TERRAIN, friendly: false },
+  { position: [28, 34], type: BuildingType.TERRAIN, friendly: false },
+
+  { position: [21, 29], type: BuildingType.TERRAIN, friendly: false },
+  { position: [29, 21], type: BuildingType.TERRAIN, friendly: false },
+]
+
 export const locToId = (loc) => loc[0] + loc[1] * GRID_SIZE;
 
 export const buildConflict = (takenSquares, hoverLocation, type) => {
