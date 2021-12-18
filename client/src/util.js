@@ -5,3 +5,5 @@ export const DARK_GREEN = '#347436';
 
 export const PLANE_THICKNESS = 0.5;
 export const GRID_SIZE = 50;
+
+export const locToId = (loc) => loc[0] + loc[1] * GRID_SIZE;

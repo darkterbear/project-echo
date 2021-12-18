@@ -1,19 +1,53 @@
 import './css/GamePage.scss';
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { Canvas } from '@react-three/fiber';
 import Plane from './components/Plane';
 import CameraMover from './components/CameraMover';
-import { GRASS_GREEN, GRID_LINE_COLOR, GRID_SIZE, PLANE_THICKNESS, SKY_BLUE } from './util';
+import { GRASS_GREEN, GRID_LINE_COLOR, GRID_SIZE, PLANE_THICKNESS, SKY_BLUE, locToId } from './util';
 import Building, { BuildingType } from './components/Building';
+
+const buildConflict = (takenSquares, hoverLocation, type) => {
+  console.log(Date.now());
+  switch (type) {
+    case BuildingType.NEXUS:
+    case BuildingType.FARM:
+      for (let x = -1; x <= 1; x++) {
+        for (let y = -1; y <= 1; y++) {
+          if (takenSquares.has(locToId([hoverLocation[0] + x, hoverLocation[1] + y]))) {
+            return true;
+          }
+        }
+      }
+      break;
+    case BuildingType.POWER_PLANT:
+    case BuildingType.REFINERY:
+    case BuildingType.BARRACKS:
+    case BuildingType.TURRET:
+      for (let x = -1; x <= 0; x++) {
+        for (let y = 0; y <= 1; y++) {
+          if (takenSquares.has(locToId([hoverLocation[0] + x, hoverLocation[1] + y]))) {
+            return true;
+          }
+        }
+      }
+      break;
+    case BuildingType.WATCHTOWER:
+      if (takenSquares.has(locToId([hoverLocation[0], hoverLocation[1]]))) {
+        return true;
+      }
+      break;
+    default:
+      return true;
+  }
+  return false;
+}
 
 function GamePage() {
   const [buildings, setBuildings] = useState([
-    { position: [1, 1], type: BuildingType.NEXUS, friendly: true },
-    { position: [4, 1], type: BuildingType.FARM, friendly: true },
-    { position: [1, 4], type: BuildingType.REFINERY, friendly: true },
-
-    { position: [4, 4], type: BuildingType.NEXUS, friendly: false },
+    { position: [4, 4], type: BuildingType.REFINERY, friendly: true },
   ]);
+
+  const [takenSquares, setTakenSquares] = useState(new Set([[4, 4], [3, 4], [3, 5], [4, 5]].map(locToId)));
 
   const [placingBuilding, setPlacingBuilding] = useState(null);
   const [hoverLocation, setHoverLocation] = useState([0, 0]);
@@ -53,7 +87,7 @@ function GamePage() {
         rotation: [Math.PI / 6, 0, 0], 
         position: [0, 0 - (10 / Math.sqrt(3)), 10]
       }}>
-        <CameraMover speed={0.5} />
+        {/* <CameraMover speed={0.5} /> */}
         <color attach="background" args={[SKY_BLUE]} />
 
         <ambientLight intensity={0.75} />
@@ -68,7 +102,7 @@ function GamePage() {
           onCellHover={onCellHover}
         />
 
-        { placingBuilding && <Building showArea pending={hoverLocation} type={placingBuilding} /> }
+        { placingBuilding && <Building showArea conflict={buildConflict(takenSquares, hoverLocation, placingBuilding)} pending={hoverLocation} type={placingBuilding} /> }
         { buildings.map(building => <Building showArea={placingBuilding} {...building} />) }
       </Canvas>
     </React.Fragment>

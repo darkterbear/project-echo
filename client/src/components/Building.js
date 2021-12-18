@@ -16,6 +16,7 @@ const LIGHT_AREA_COLOR = '#376e18';
 const DARK_BUILDING_COLOR = '#333333';
 const DARK_AREA_COLOR = '#555555';
 const PENDING_BUILDING_COLOR = '#527aff';
+const CONFLICT_COLOR = '#ff0000';
 
 /**
  * Three.js mesh component for a building.
@@ -23,12 +24,11 @@ const PENDING_BUILDING_COLOR = '#527aff';
  * @param {BuildingType} type: enum describing type of building
  * @returns 
  */
-export default function Building({ type, position = [0,0,0], friendly = true, pending = null, showArea }) {
+export default function Building({ type, position = [0,0,0], friendly = true, pending = null, showArea, conflict = false }) {
   const mesh = useRef();
 
   useFrame((state) => {
     if (pending) {
-      console.log(state.mouse)
       mesh.current.position.x = pending[0];
       mesh.current.position.y = pending[1];
     }
@@ -45,7 +45,7 @@ export default function Building({ type, position = [0,0,0], friendly = true, pe
           </mesh>
           { showArea && <mesh receiveShadow position={[0, 0, 0.01]} >
             <planeGeometry args={[3, 3]} />
-            <meshStandardMaterial color={pending ? PENDING_BUILDING_COLOR : friendly ? LIGHT_AREA_COLOR : DARK_AREA_COLOR} />
+            <meshStandardMaterial color={conflict ? CONFLICT_COLOR : pending ? PENDING_BUILDING_COLOR : friendly ? LIGHT_AREA_COLOR : DARK_AREA_COLOR} />
           </mesh>}
         </group>
       );
@@ -58,7 +58,7 @@ export default function Building({ type, position = [0,0,0], friendly = true, pe
             </mesh>
             { showArea && <mesh receiveShadow position={[-0.5, 0.5, 0.01]} >
               <planeGeometry args={[2, 2]} />
-              <meshStandardMaterial color={pending ? PENDING_BUILDING_COLOR : friendly ? LIGHT_AREA_COLOR : DARK_AREA_COLOR} />
+              <meshStandardMaterial color={conflict ? CONFLICT_COLOR : pending ? PENDING_BUILDING_COLOR : friendly ? LIGHT_AREA_COLOR : DARK_AREA_COLOR} />
             </mesh> }
           </group>
         );
@@ -95,7 +95,7 @@ export default function Building({ type, position = [0,0,0], friendly = true, pe
 
             { showArea && <mesh receiveShadow position={[0, 0, 0.01]} >
               <planeGeometry args={[3, 3]} />
-              <meshStandardMaterial color={pending ? PENDING_BUILDING_COLOR : friendly ? LIGHT_AREA_COLOR : DARK_AREA_COLOR} />
+              <meshStandardMaterial color={conflict ? CONFLICT_COLOR : pending ? PENDING_BUILDING_COLOR : friendly ? LIGHT_AREA_COLOR : DARK_AREA_COLOR} />
             </mesh>}
           </group>
         );
@@ -112,7 +112,7 @@ export default function Building({ type, position = [0,0,0], friendly = true, pe
             </mesh>
             { showArea && <mesh receiveShadow position={[-0.5, 0.5, 0.01]} >
               <planeGeometry args={[2, 2]} />
-              <meshStandardMaterial color={pending ? PENDING_BUILDING_COLOR : friendly ? LIGHT_AREA_COLOR : DARK_AREA_COLOR} />
+              <meshStandardMaterial color={conflict ? CONFLICT_COLOR : pending ? PENDING_BUILDING_COLOR : friendly ? LIGHT_AREA_COLOR : DARK_AREA_COLOR} />
             </mesh>}
           </group>
         );
@@ -133,7 +133,7 @@ export default function Building({ type, position = [0,0,0], friendly = true, pe
             </mesh>
             { showArea && <mesh receiveShadow position={[-0.5, 0.5, 0.01]} >
               <planeGeometry args={[2, 2]} />
-              <meshStandardMaterial color={pending ? PENDING_BUILDING_COLOR : friendly ? LIGHT_AREA_COLOR : DARK_AREA_COLOR} />
+              <meshStandardMaterial color={conflict ? CONFLICT_COLOR : pending ? PENDING_BUILDING_COLOR : friendly ? LIGHT_AREA_COLOR : DARK_AREA_COLOR} />
             </mesh>}
           </group>
         );
@@ -150,7 +150,7 @@ export default function Building({ type, position = [0,0,0], friendly = true, pe
             </mesh>
             { showArea && <mesh receiveShadow position={[-0.5, 0.5, 0.01]} >
               <planeGeometry args={[2, 2]} />
-              <meshStandardMaterial color={pending ? PENDING_BUILDING_COLOR : friendly ? LIGHT_AREA_COLOR : DARK_AREA_COLOR} />
+              <meshStandardMaterial color={conflict ? CONFLICT_COLOR : pending ? PENDING_BUILDING_COLOR : friendly ? LIGHT_AREA_COLOR : DARK_AREA_COLOR} />
             </mesh>}
           </group>
         );
@@ -163,7 +163,7 @@ export default function Building({ type, position = [0,0,0], friendly = true, pe
             </mesh>
             { showArea && <mesh receiveShadow position={[0, 0, 0.01]} >
               <planeGeometry args={[1, 1]} />
-              <meshStandardMaterial color={pending ? PENDING_BUILDING_COLOR : friendly ? LIGHT_AREA_COLOR : DARK_AREA_COLOR} />
+              <meshStandardMaterial color={conflict ? CONFLICT_COLOR : pending ? PENDING_BUILDING_COLOR : friendly ? LIGHT_AREA_COLOR : DARK_AREA_COLOR} />
             </mesh>}
           </group>
         );
