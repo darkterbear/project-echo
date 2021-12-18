@@ -84,28 +84,50 @@ export default function Building({ type, position, friendly = true }) {
             </mesh>
           </>
         );
-        case BuildingType.BARRACKS:
+      case BuildingType.BARRACKS:
+        return (
+          <>
+            <mesh castShadow position={[position[0] + 0.2 / Math.sqrt(3), position[1] + 0.5, 0.2 / 3]} rotation={[0, 0, 0]} ref={mesh}>
+              <cylinderGeometry args={[0.4 / 3, 0.4 / 3, 1, 3]} />
+              <meshStandardMaterial color={friendly ? LIGHT_BUILDING_COLOR : DARK_BUILDING_COLOR} />
+            </mesh>
+            <mesh castShadow position={[position[0] + 0.2 / Math.sqrt(3), position[1] + 0.5, 0.2 / 3]} rotation={[0, 0, 0]} ref={mesh}>
+              <cylinderGeometry args={[0.4 / 3, 0.4 / 3, 1, 3]} />
+              <meshStandardMaterial color={friendly ? LIGHT_BUILDING_COLOR : DARK_BUILDING_COLOR} />
+            </mesh>
+            <mesh castShadow position={[position[0] + 1 - 0.2 / Math.sqrt(3), position[1] + 0.5, 0.2 / 3]} rotation={[0, 0, 0]} ref={mesh}>
+              <cylinderGeometry args={[0.4 / 3, 0.4 / 3, 1, 3]} />
+              <meshStandardMaterial color={friendly ? LIGHT_BUILDING_COLOR : DARK_BUILDING_COLOR} />
+            </mesh>
+            <mesh castShadow position={[position[0] + 0.5, position[1] + 0.5, 0.2 / 3]} rotation={[0, 0, 0]} ref={mesh}>
+              <cylinderGeometry args={[0.4 / 3, 0.4 / 3, 1, 3]} />
+              <meshStandardMaterial color={friendly ? LIGHT_BUILDING_COLOR : DARK_BUILDING_COLOR} />
+            </mesh>
+          </>
+        );
+        case BuildingType.TURRET:
           return (
             <>
-              <mesh castShadow position={[position[0] + 0.2 / Math.sqrt(3), position[1] + 0.5, 0.2 / 3]} rotation={[0, 0, 0]} ref={mesh}>
-                <cylinderGeometry args={[0.4 / 3, 0.4 / 3, 1, 3]} />
+              <mesh castShadow position={[position[0] + 0.5, position[1] + 0.5, 0.2]} rotation={[Math.PI / 2, Math.PI / 4, 0]} ref={mesh}>
+                <cylinderGeometry args={[0.3, 0.5, 0.4, 4]} />
                 <meshStandardMaterial color={friendly ? LIGHT_BUILDING_COLOR : DARK_BUILDING_COLOR} />
               </mesh>
-              <mesh castShadow position={[position[0] + 0.2 / Math.sqrt(3), position[1] + 0.5, 0.2 / 3]} rotation={[0, 0, 0]} ref={mesh}>
-                <cylinderGeometry args={[0.4 / 3, 0.4 / 3, 1, 3]} />
-                <meshStandardMaterial color={friendly ? LIGHT_BUILDING_COLOR : DARK_BUILDING_COLOR} />
-              </mesh>
-              <mesh castShadow position={[position[0] + 1 - 0.2 / Math.sqrt(3), position[1] + 0.5, 0.2 / 3]} rotation={[0, 0, 0]} ref={mesh}>
-                <cylinderGeometry args={[0.4 / 3, 0.4 / 3, 1, 3]} />
-                <meshStandardMaterial color={friendly ? LIGHT_BUILDING_COLOR : DARK_BUILDING_COLOR} />
-              </mesh>
-              <mesh castShadow position={[position[0] + 0.5, position[1] + 0.5, 0.2 / 3]} rotation={[0, 0, 0]} ref={mesh}>
-                <cylinderGeometry args={[0.4 / 3, 0.4 / 3, 1, 3]} />
+              <mesh castShadow position={[position[0] + 0.75, position[1] + 0.5, 0.2]} ref={mesh}>
+                <boxGeometry args={[1, 0.1, 0.1]} />
                 <meshStandardMaterial color={friendly ? LIGHT_BUILDING_COLOR : DARK_BUILDING_COLOR} />
               </mesh>
             </>
           );
-      default:
-        return null;
+        case BuildingType.WATCHTOWER:
+          return (
+            <>
+              <mesh castShadow position={[position[0], position[1], 0.75]} rotation={[Math.PI / 2, Math.PI / 4, 0]} ref={mesh}>
+                <cylinderGeometry args={[0.1, 0.2, 1.5, 4]} />
+                <meshStandardMaterial color={friendly ? LIGHT_BUILDING_COLOR : DARK_BUILDING_COLOR} />
+              </mesh>
+            </>
+          );
+        default:
+          return null;
   }
 }
