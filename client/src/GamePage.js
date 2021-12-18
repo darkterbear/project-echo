@@ -3,44 +3,8 @@ import React, { useCallback, useEffect, useState } from 'react';
 import { Canvas } from '@react-three/fiber';
 import Plane from './components/Plane';
 import CameraMover from './components/CameraMover';
-import { GRASS_GREEN, GRID_LINE_COLOR, GRID_SIZE, PLANE_THICKNESS, SKY_BLUE, locToId } from './util';
+import { GRASS_GREEN, GRID_LINE_COLOR, GRID_SIZE, PLANE_THICKNESS, SKY_BLUE, locToId , buildConflict, keyToType } from './util';
 import Building, { BuildingType } from './components/Building';
-
-const buildConflict = (takenSquares, hoverLocation, type) => {
-  console.log(Date.now());
-  switch (type) {
-    case BuildingType.NEXUS:
-    case BuildingType.FARM:
-      for (let x = -1; x <= 1; x++) {
-        for (let y = -1; y <= 1; y++) {
-          if (takenSquares.has(locToId([hoverLocation[0] + x, hoverLocation[1] + y]))) {
-            return true;
-          }
-        }
-      }
-      break;
-    case BuildingType.POWER_PLANT:
-    case BuildingType.REFINERY:
-    case BuildingType.BARRACKS:
-    case BuildingType.TURRET:
-      for (let x = -1; x <= 0; x++) {
-        for (let y = 0; y <= 1; y++) {
-          if (takenSquares.has(locToId([hoverLocation[0] + x, hoverLocation[1] + y]))) {
-            return true;
-          }
-        }
-      }
-      break;
-    case BuildingType.WATCHTOWER:
-      if (takenSquares.has(locToId([hoverLocation[0], hoverLocation[1]]))) {
-        return true;
-      }
-      break;
-    default:
-      return true;
-  }
-  return false;
-}
 
 function GamePage() {
   const [buildings, setBuildings] = useState([
@@ -54,23 +18,7 @@ function GamePage() {
 
   useEffect(() => {
     window.onkeydown = (e) => {
-      if (e.key === 'Escape') {
-        setPlacingBuilding(null);
-      } else if (e.key === '1') {
-        setPlacingBuilding(BuildingType.NEXUS);
-      } else if (e.key === '2') {
-        setPlacingBuilding(BuildingType.POWER_PLANT);
-      } else if (e.key === '3') {
-        setPlacingBuilding(BuildingType.FARM);
-      } else if (e.key === '4') {
-        setPlacingBuilding(BuildingType.REFINERY);
-      } else if (e.key === '5') {
-        setPlacingBuilding(BuildingType.BARRACKS);
-      } else if (e.key === '6') {
-        setPlacingBuilding(BuildingType.TURRET);
-      } else if (e.key === '7') {
-        setPlacingBuilding(BuildingType.WATCHTOWER);
-      }
+      setPlacingBuilding(keyToType(e.key));
     }
   }, []);
 
@@ -111,8 +59,8 @@ function GamePage() {
 
         setTakenSquares(newTakenSquares);
         setBuildings([...buildings, { position: hoverLocation, type: placingBuilding, friendly: true }]);
+        setPlacingBuilding(null);
       }
-      setPlacingBuilding(null);
     }
   }
 
