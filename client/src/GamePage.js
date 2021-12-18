@@ -32,9 +32,11 @@ function GamePage() {
         <Building position={[1, 1]} type={BuildingType.NEXUS} />
         <Building position={[4, 1]} type={BuildingType.POWER_PLANT} />
         <Building position={[1, 5]} type={BuildingType.FARM} />
+        <Building position={[1, 7]} type={BuildingType.REFINERY} />
 
         <Building position={[5, 5]} type={BuildingType.FARM} friendly={false} />
         <Building position={[5, 8]} type={BuildingType.NEXUS} friendly={false} />
+        <Building position={[6, 1]} type={BuildingType.BARRACKS} friendly={false} />
       </Canvas>
     </React.Fragment>
   );
