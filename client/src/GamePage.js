@@ -16,13 +16,14 @@ function GamePage() {
         rotation: [Math.PI / 6, 0, 0], 
         position: [0, 0 - (10 / Math.sqrt(3)), 10]
       }}>
-        <CameraMover canvasRef={canvasRef} speed={0.5} />
+        {/* <CameraMover canvasRef={canvasRef} speed={0.5} /> */}
         <color attach="background" args={[SKY_BLUE]} />
 
-        <ambientLight intensity={1} castShadow />
-        <directionalLight castShadow intensity={1} position={[10, 6, 6]} shadow-mapSize={[1024, 1024]}>
+        <ambientLight intensity={0.75} castShadow />
+        <pointLight position={[15, 15, 25]} intensity={1.5} castShadow shadow-mapSize={[2048, 2048]} />
+        {/* <directionalLight castShadow intensity={1.5} position={[10, 10, 10]} shadow-mapSize={[2048, 2048]}>
           <orthographicCamera attach="shadow-camera" left={-20} right={20} top={20} bottom={-20} />
-        </directionalLight>
+        </directionalLight> */}
 
         {/* Puts 0, 0 at the center of the bottom left square */}
         <gridHelper args={[GRID_SIZE, GRID_SIZE, GRID_LINE_COLOR, GRID_LINE_COLOR]} rotation={[Math.PI / 2, 0, 0]} position={[GRID_SIZE / 2 - 0.5, GRID_SIZE / 2 - 0.5, 0.01]} />
@@ -31,6 +32,9 @@ function GamePage() {
         <Building position={[1, 1]} type={BuildingType.NEXUS} />
         <Building position={[4, 1]} type={BuildingType.POWER_PLANT} />
         <Building position={[1, 5]} type={BuildingType.FARM} />
+
+        <Building position={[5, 5]} type={BuildingType.FARM} friendly={false} />
+        <Building position={[5, 8]} type={BuildingType.NEXUS} friendly={false} />
       </Canvas>
     </React.Fragment>
   );
