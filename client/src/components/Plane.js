@@ -11,7 +11,6 @@ export default function Plane({ dimensions, visibility, onCellHover, selectionEn
 
   const [mouseDownLocation, setMouseDownLocation] = useState(null);
 
-  console.log(visibility)
   const handleClick = (e) => {
     if (onClick) {
       onClick(e);
@@ -64,7 +63,7 @@ export default function Plane({ dimensions, visibility, onCellHover, selectionEn
         <planeGeometry args={[1,1]} />
         <meshStandardMaterial color={SELECTION_COLOR}/>
       </mesh>}
-      {Array.from(visibility).map((id) => <mesh receiveShadow position={[...idToLoc(id), 0.005]}>
+      {Array.from(visibility).filter(id => id >= 0).map((id) => <mesh receiveShadow position={[...idToLoc(id), 0.005]}>
         <planeGeometry args={[1,1]} />
         <meshStandardMaterial color={VISIBLE_TILE_COLOR}/>
       </mesh>)}

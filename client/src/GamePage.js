@@ -28,7 +28,7 @@ function GamePage() {
 
   const onClick = (e) => {
     if (placingBuilding) {
-      if (!buildConflict(buildingTakenSquares, hoverLocation, placingBuilding)) {
+      if (!buildConflict(buildingTakenSquares, buildingVisibility, hoverLocation, placingBuilding)) {
         const newBuildingTakenSquares = new Set([...buildingTakenSquares])
         const newBuildingVisibility = new Set([...buildingVisibility])
         switch (placingBuilding) {
@@ -81,7 +81,7 @@ function GamePage() {
         rotation: [Math.PI / 6, 0, 0], 
         position: [0, 0 - (10 / Math.sqrt(3)), 10]
       }}>
-        {/* <CameraMover speed={0.5} /> */}
+        <CameraMover speed={0.5} />
         <color attach="background" args={[SKY_BLUE]} />
 
         <ambientLight intensity={0.75} />
@@ -98,7 +98,7 @@ function GamePage() {
           onClick={onClick}
         />
 
-        { placingBuilding && <Building showArea conflict={buildConflict(buildingTakenSquares, hoverLocation, placingBuilding)} pending={hoverLocation} type={placingBuilding} /> }
+        { placingBuilding && <Building showArea conflict={buildConflict(buildingTakenSquares, buildingVisibility, hoverLocation, placingBuilding)} pending={hoverLocation} type={placingBuilding} /> }
         { buildings.map(building => <Building showArea={placingBuilding} {...building} />) }
       </Canvas>
     </React.Fragment>

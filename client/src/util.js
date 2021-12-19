@@ -107,7 +107,7 @@ export const computeNewBuildingVisibility = (buildings) => {
 export const DEFAULT_BUILDING_VISIBLE_SQUARES = computeNewBuildingVisibility(DEFAULT_TERRAIN);
 
 // TODO: no building in hidden squares
-export const buildConflict = (takenSquares, hoverLocation, type) => {
+export const buildConflict = (takenSquares, visibility, hoverLocation, type) => {
   switch (type) {
     case BuildingType.NEXUS:
     case BuildingType.FARM:
@@ -118,6 +118,10 @@ export const buildConflict = (takenSquares, hoverLocation, type) => {
       for (let x = -1; x <= 1; x++) {
         for (let y = -1; y <= 1; y++) {
           if (takenSquares.has(locToId([hoverLocation[0] + x, hoverLocation[1] + y]))) {
+            return true;
+          }
+
+          if (!visibility.has(locToId([hoverLocation[0] + x, hoverLocation[1] + y]))) {
             return true;
           }
         }
@@ -136,11 +140,19 @@ export const buildConflict = (takenSquares, hoverLocation, type) => {
           if (takenSquares.has(locToId([hoverLocation[0] + x, hoverLocation[1] + y]))) {
             return true;
           }
+
+          if (!visibility.has(locToId([hoverLocation[0] + x, hoverLocation[1] + y]))) {
+            return true;
+          }
         }
       }
       break;
     case BuildingType.WATCHTOWER:
       if (takenSquares.has(locToId([hoverLocation[0], hoverLocation[1]]))) {
+        return true;
+      }
+
+      if (!visibility.has(locToId([hoverLocation[0], hoverLocation[1]]))) {
         return true;
       }
       break;
