@@ -9,7 +9,7 @@ const PORT = process.env.PORT;
 
 const app = express();
 const sessionMiddleware = session({
-  secret: 'mahjong',
+  secret: 'echo',
   resave: true,
   saveUninitialized: true,
   // genid: () => uuidv4(),
