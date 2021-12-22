@@ -40,7 +40,15 @@ export default function sockets(
       game.player2.socket.emit('start_game');
     }
 
-    // TODO: handle socket.on('disconnect')
+    // Delete both players and the game on disconnect
+    socket.on('disconnect', () => {
+      const game = player.game;
+      if (game) {
+        if (game.player1) game.player1.delete();
+        if (game.player2) game.player2.delete();
+        game.delete();
+      }
+    });
   });
 
   return io;

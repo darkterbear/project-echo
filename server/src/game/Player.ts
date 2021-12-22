@@ -40,4 +40,8 @@ export default class Player {
       throw new Error('Game already has two players');
     }
   }
+
+  delete(): void {
+    Player.players.delete(this.id);
+  }
 }

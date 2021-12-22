@@ -40,4 +40,8 @@ export default class Game {
 
     Game.games.set(this.id, this);
   }
+
+  delete(): void {
+    Game.games.delete(this.id);
+  }
 }
