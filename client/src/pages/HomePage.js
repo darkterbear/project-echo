@@ -1,6 +1,5 @@
-import './css/GamePage.scss';
 import React from 'react';
-import { createGame } from './api';
+import { createGame } from '../api';
 
 function HomePage() {
 
@@ -13,7 +12,7 @@ function HomePage() {
   }
 
   return (
-    <div>
+    <div className="full-center">
       <h1>Home Page</h1>
       <button onClick={onCreateGame}>Create Game</button>
     </div>

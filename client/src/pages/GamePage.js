@@ -1,11 +1,11 @@
-import './css/GamePage.scss';
+import '../css/GamePage.scss';
 import React, { useCallback, useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { Canvas } from '@react-three/fiber';
-import Plane from './components/Plane';
-import CameraMover from './components/CameraMover';
-import { GRID_LINE_COLOR, GRID_SIZE, PLANE_THICKNESS, SKY_BLUE, locToId , buildConflict, keyToType, DEFAULT_TERRAIN, DEFAULT_BUILDING_TAKEN_SQUARES, DEFAULT_BUILDING_VISIBLE_SQUARES, computeNewBuildingVisibility } from './util';
-import Building, { BuildingType } from './components/Building';
+import Plane from '../components/Plane';
+import CameraMover from '../components/CameraMover';
+import { GRID_LINE_COLOR, GRID_SIZE, PLANE_THICKNESS, SKY_BLUE, locToId , buildConflict, keyToType, DEFAULT_TERRAIN, DEFAULT_BUILDING_TAKEN_SQUARES, DEFAULT_BUILDING_VISIBLE_SQUARES, computeNewBuildingVisibility } from '../util';
+import Building, { BuildingType } from '../components/Building';
 
 function GamePage() {
   const [buildings, setBuildings] = useState([

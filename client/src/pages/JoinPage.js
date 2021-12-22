@@ -1,7 +1,6 @@
-import './css/GamePage.scss';
 import React, { useEffect } from 'react';
 import { useParams } from 'react-router-dom';
-import { joinGame } from './api';
+import { joinGame } from '../api';
 
 function JoinPage() {
   const { id } = useParams();
@@ -16,8 +15,8 @@ function JoinPage() {
   }, []);
 
   return (
-    <div>
-      <h1>Join Page: {useParams().id}</h1>
+    <div className="full-center">
+      <h1>Loading...</h1>
     </div>
   );
 }

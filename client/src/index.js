@@ -6,10 +6,10 @@ import {
   Routes,
   Route
 } from 'react-router-dom';
-import GamePage from './GamePage';
-import HomePage from './HomePage';
-import WaitPage from './WaitPage';
-import JoinPage from './JoinPage';
+import GamePage from './pages/GamePage';
+import HomePage from './pages/HomePage';
+import WaitPage from './pages/WaitPage';
+import JoinPage from './pages/JoinPage';
 
 ReactDOM.render(
   <BrowserRouter>
