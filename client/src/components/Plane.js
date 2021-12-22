@@ -39,8 +39,6 @@ export default function Plane({ dimensions, visibility, onCellHover, selectionEn
   const handleMove = (e) => {
     e.stopPropagation();
     if (mouseDownLocation) {
-      console.log(selectionMesh.current);
-
       selectionMesh.current.position.x = (e.intersections[0].point.x + mouseDownLocation.x) / 2;
       selectionMesh.current.position.y = (e.intersections[0].point.y + mouseDownLocation.y) / 2;
 

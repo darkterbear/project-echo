@@ -1,5 +1,6 @@
 import './css/GamePage.scss';
 import React, { useCallback, useEffect, useState } from 'react';
+import { useParams } from 'react-router-dom';
 import { Canvas } from '@react-three/fiber';
 import Plane from './components/Plane';
 import CameraMover from './components/CameraMover';

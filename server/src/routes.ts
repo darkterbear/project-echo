@@ -1,6 +1,6 @@
 import { Application } from 'express';
-import Game from 'game/Game';
-import Player from 'game/Player';
+import Game from './game/Game';
+import Player from './game/Player';
 import { Server } from 'socket.io';
 
 export default function routes(app: Application, io: Server): void {

@@ -3,7 +3,7 @@ import { Socket, Server } from 'socket.io';
 import http from 'http';
 import { RequestHandler } from 'express';
 import sharedSession from 'express-socket.io-session';
-import Player from 'game/Player';
+import Player from './game/Player';
 
 export default function sockets(
   httpServer: http.Server, 

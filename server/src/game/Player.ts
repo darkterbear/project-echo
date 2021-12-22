@@ -14,7 +14,7 @@ export default class Player {
    * @returns 
    */
   static getPlayer(id: string): Player | undefined {
-    return this.players.get(id);
+    return Player.players.get(id);
   }
 
   /**

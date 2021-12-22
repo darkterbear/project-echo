@@ -1,5 +1,5 @@
 const ID_LENGTH = 4;
-const ID_CHARS = 'ABCDEFGHJKMNPQRSTUVWXYZ23456789';
+const ID_CHARS = 'abcdefghijklmnopqrstuvwxyz';
 
 export const randomId = (): string => {
   let id = '';
