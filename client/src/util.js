@@ -5,27 +5,27 @@ export const GRID_LINE_COLOR = '#cccccc';
 export const DARK_GREEN = '#347436';
 
 export const PLANE_THICKNESS = 0.5;
-export const GRID_SIZE = 50;
+export const GRID_SIZE = 49;
 
 export const DEFAULT_TERRAIN = [
   { position: [4, 4], type: BuildingType.NEXUS, friendly: true },
   
-  { position: [10, 22], type: BuildingType.TERRAIN, friendly: false },
-  { position: [13, 22], type: BuildingType.TERRAIN, friendly: false },
-  { position: [16, 22], type: BuildingType.TERRAIN, friendly: false },
-  { position: [22, 10], type: BuildingType.TERRAIN, friendly: false },
-  { position: [22, 13], type: BuildingType.TERRAIN, friendly: false },
-  { position: [22, 16], type: BuildingType.TERRAIN, friendly: false },
+  { position: [9, 24], type: BuildingType.TERRAIN, friendly: false },
+  { position: [12, 24], type: BuildingType.TERRAIN, friendly: false },
+  { position: [15, 24], type: BuildingType.TERRAIN, friendly: false },
+  { position: [33, 24], type: BuildingType.TERRAIN, friendly: false },
+  { position: [36, 24], type: BuildingType.TERRAIN, friendly: false },
+  { position: [39, 24], type: BuildingType.TERRAIN, friendly: false },
 
-  { position: [40, 28], type: BuildingType.TERRAIN, friendly: false },
-  { position: [37, 28], type: BuildingType.TERRAIN, friendly: false },
-  { position: [34, 28], type: BuildingType.TERRAIN, friendly: false },
-  { position: [28, 40], type: BuildingType.TERRAIN, friendly: false },
-  { position: [28, 37], type: BuildingType.TERRAIN, friendly: false },
-  { position: [28, 34], type: BuildingType.TERRAIN, friendly: false },
+  { position: [24, 9], type: BuildingType.TERRAIN, friendly: false },
+  { position: [24, 12], type: BuildingType.TERRAIN, friendly: false },
+  { position: [24, 15], type: BuildingType.TERRAIN, friendly: false },
+  { position: [24, 33], type: BuildingType.TERRAIN, friendly: false },
+  { position: [24, 36], type: BuildingType.TERRAIN, friendly: false },
+  { position: [24, 39], type: BuildingType.TERRAIN, friendly: false },
 
-  { position: [21, 29], type: BuildingType.TERRAIN, friendly: false },
-  { position: [29, 21], type: BuildingType.TERRAIN, friendly: false },
+  { position: [21, 27], type: BuildingType.TERRAIN, friendly: false },
+  { position: [27, 21], type: BuildingType.TERRAIN, friendly: false },
 ];
 
 export const locToId = (loc) => {
@@ -110,7 +110,7 @@ export const buildConflict = (takenSquares, visibility, hoverLocation, type) => 
   switch (type) {
     case BuildingType.NEXUS:
     case BuildingType.FARM:
-      if (hoverLocation[0] < 1 || hoverLocation[0] > 48 || hoverLocation[1] < 1 || hoverLocation[1] > 48) {
+      if (hoverLocation[0] < 1 || hoverLocation[0] > GRID_SIZE - 1 || hoverLocation[1] < 1 || hoverLocation[1] > GRID_SIZE - 1) {
         return true;
       }
 
@@ -130,7 +130,7 @@ export const buildConflict = (takenSquares, visibility, hoverLocation, type) => 
     case BuildingType.REFINERY:
     case BuildingType.BARRACKS:
     case BuildingType.TURRET:
-      if (hoverLocation[0] < 1 || hoverLocation[1] > 48) {
+      if (hoverLocation[0] < 1 || hoverLocation[1] > GRID_SIZE - 1) {
         return true;
       }
 
