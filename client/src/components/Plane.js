@@ -1,5 +1,5 @@
+import { idToLoc } from 'echo';
 import React, { useRef, useState } from 'react';
-import { idToLoc } from '../util';
 
 const SELECTION_COLOR = '#264fcf';
 export const VISIBLE_TILE_COLOR = '#52a523';

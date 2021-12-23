@@ -1,13 +1,13 @@
 import { Socket } from 'socket.io';
-import Building, { BuildingType } from './Building';
 import Game from './Game';
-import { flipLoc } from './util';
+import { flipLoc, Building, BuildingType } from 'echo';
 
 export default class Player {
   id: string;
   game?: Game;
   socket?: Socket;
   buildings: Building[];
+  visibility: Set<number>;
 
   private static players: Map<string, Player> = new Map();
 

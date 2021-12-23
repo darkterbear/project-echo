@@ -3,6 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "echo": "file:../echo",
     "@react-three/fiber": "^7.0.24",
     "history": "5",
     "react": "^17.0.2",

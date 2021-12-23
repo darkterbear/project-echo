@@ -1,5 +1,5 @@
 import { randomId } from '../util';
-import Building, { BuildingType, getTerrain } from './Building';
+import { Building, BuildingType, getTerrain } from 'echo';
 import Player from './Player';
 
 export default class Game {
@@ -7,6 +7,7 @@ export default class Game {
   player1: Player;
   player2: Player;
   terrain: Building[];
+  buildingTakenSquares: Set<number>;
 
   private static games: Map<string, Game> = new Map();
 

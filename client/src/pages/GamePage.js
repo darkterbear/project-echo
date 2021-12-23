@@ -1,19 +1,21 @@
 import '../css/GamePage.scss';
+import { buildConflict, computeNewBuildingVisibility, getTerrain, GRID_SIZE, locToId, perspectiveNexus, PERSPECTIVE_DEFAULT_BUILDING_TAKEN_SQUARES } from 'echo';
 import React, { useCallback, useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { Canvas } from '@react-three/fiber';
 import Plane from '../components/Plane';
 import CameraMover from '../components/CameraMover';
-import { GRID_LINE_COLOR, GRID_SIZE, PLANE_THICKNESS, SKY_BLUE, locToId , buildConflict, keyToType, DEFAULT_TERRAIN, DEFAULT_BUILDING_TAKEN_SQUARES, DEFAULT_BUILDING_VISIBLE_SQUARES, computeNewBuildingVisibility } from '../util';
+import { GRID_LINE_COLOR, PLANE_THICKNESS, SKY_BLUE, keyToType } from '../util';
 import Building, { BuildingType } from '../components/Building';
 
-function GamePage() {
-  const [buildings, setBuildings] = useState([
-    ...DEFAULT_TERRAIN
-  ]);
+const terrain = getTerrain();
 
-  const [buildingTakenSquares, setBuildingTakenSquares] = useState(DEFAULT_BUILDING_TAKEN_SQUARES);
-  const [buildingVisibility, setBuildingVisibility] = useState(DEFAULT_BUILDING_VISIBLE_SQUARES);
+function GamePage() {
+  const [friendlyBuildings, setFriendlyBuildings] = useState([perspectiveNexus]);
+  const [hostileBuildings, setHostileBuildings] = useState([]);
+
+  const [buildingTakenSquares, setBuildingTakenSquares] = useState(PERSPECTIVE_DEFAULT_BUILDING_TAKEN_SQUARES);
+  const [buildingVisibility, setBuildingVisibility] = useState(computeNewBuildingVisibility(friendlyBuildings));
   const [placingBuilding, setPlacingBuilding] = useState(null);
   const [hoverLocation, setHoverLocation] = useState([0, 0]);
 
@@ -64,10 +66,10 @@ function GamePage() {
             return;
         }
 
-        const newBuildings = [...buildings, { position: hoverLocation, type: placingBuilding, friendly: true }];
+        const newFriendlyBuildings = [...friendlyBuildings, { position: hoverLocation, type: placingBuilding }];
         setBuildingTakenSquares(newBuildingTakenSquares);
-        setBuildingVisibility(computeNewBuildingVisibility(newBuildings, buildingVisibility));
-        setBuildings(newBuildings);
+        setBuildingVisibility(computeNewBuildingVisibility(newFriendlyBuildings));
+        setFriendlyBuildings(newFriendlyBuildings);
         setPlacingBuilding(null);
       }
     }
@@ -100,7 +102,10 @@ function GamePage() {
         />
 
         { placingBuilding && <Building showArea conflict={buildConflict(buildingTakenSquares, buildingVisibility, hoverLocation, placingBuilding)} pending={hoverLocation} type={placingBuilding} /> }
-        { buildings.map(building => <Building showArea={placingBuilding} {...building} />) }
+        
+        { terrain.map(building => <Building showArea={placingBuilding} {...building} />) }
+        { friendlyBuildings.map(building => <Building showArea={placingBuilding} {...building} friendly />) }
+        { hostileBuildings.map(building => <Building showArea={placingBuilding} {...building} />) }
       </Canvas>
     </React.Fragment>
   );
