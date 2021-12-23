@@ -178,3 +178,23 @@ export const getBuildingTakenSquares = (buildings: Building[]): Map<number, Buil
   }
   return takenSquares;
 }
+
+/**
+ * @param buildings Buildings to consider
+ * @param visibility Set of locations to inspect
+ * @param takenSquares Map of locations to Buildings
+ * @returns Array of buildings that are at least partially visible in visibility and are part of buildings
+ */
+export const getVisibleBuildings = (buildings: Building[], visibility: Set<number>, takenSquares: Map<number, Building>): Set<Building> => {
+  const visibleBuildings = new Set<Building>();
+
+  for (const id of visibility) {
+    if (takenSquares.has(id)) {
+      const building = takenSquares.get(id);
+      buildings.includes(building);
+      visibleBuildings.add(building);
+    }
+  }
+
+  return visibleBuildings;
+}

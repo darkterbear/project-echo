@@ -26,3 +26,10 @@ export declare const getTerrain: () => Building[];
  * Maps all occupied squares to the building that occupies them.
  */
 export declare const getBuildingTakenSquares: (buildings: Building[]) => Map<number, Building>;
+/**
+ * @param buildings Buildings to consider
+ * @param visibility Set of locations to inspect
+ * @param takenSquares Map of locations to Buildings
+ * @returns Array of buildings that are at least partially visible in visibility and are part of buildings
+ */
+export declare const getVisibleBuildings: (buildings: Building[], visibility: Set<number>, takenSquares: Map<number, Building>) => Set<Building>;

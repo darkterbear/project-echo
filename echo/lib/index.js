@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.getBuildingTakenSquares = exports.getTerrain = exports.player2Nexus = exports.perspectiveNexus = exports.GRID_SIZE = exports.buildConflict = exports.computeNewBuildingVisibility = exports.flipLoc = exports.idToLoc = exports.locToId = exports.BuildingType = exports.Building = void 0;
+exports.getVisibleBuildings = exports.getBuildingTakenSquares = exports.getTerrain = exports.player2Nexus = exports.perspectiveNexus = exports.GRID_SIZE = exports.buildConflict = exports.computeNewBuildingVisibility = exports.flipLoc = exports.idToLoc = exports.locToId = exports.BuildingType = exports.Building = void 0;
 class Building {
     constructor(position, type) {
         this.position = position;
@@ -172,4 +172,22 @@ const getBuildingTakenSquares = (buildings) => {
     return takenSquares;
 };
 exports.getBuildingTakenSquares = getBuildingTakenSquares;
+/**
+ * @param buildings Buildings to consider
+ * @param visibility Set of locations to inspect
+ * @param takenSquares Map of locations to Buildings
+ * @returns Array of buildings that are at least partially visible in visibility and are part of buildings
+ */
+const getVisibleBuildings = (buildings, visibility, takenSquares) => {
+    const visibleBuildings = new Set();
+    for (const id of visibility) {
+        if (takenSquares.has(id)) {
+            const building = takenSquares.get(id);
+            buildings.includes(building);
+            visibleBuildings.add(building);
+        }
+    }
+    return visibleBuildings;
+};
+exports.getVisibleBuildings = getVisibleBuildings;
 //# sourceMappingURL=index.js.map

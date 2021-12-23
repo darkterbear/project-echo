@@ -1,5 +1,5 @@
 import { randomId } from '../util';
-import { Building, BuildingType, getTerrain, buildConflict, computeNewBuildingVisibility } from 'echo';
+import { Building, BuildingType, getTerrain, buildConflict, computeNewBuildingVisibility, getVisibleBuildings } from 'echo';
 import Player from './Player';
 
 export default class Game {
@@ -56,11 +56,23 @@ export default class Game {
     player.buildings.push(building);
 
     // Update player visibility, send building updates for uncovered enemy buildings
-    const newVisibility = computeNewBuildingVisibility(player.buildings);
-    const newlyVisible = new Set([...newVisibility].filter(x => !player.visibility.has(x)));
     const opponent = player.opponent();
+    const preVisible = getVisibleBuildings(opponent.buildings, player.visibility, this.buildingTakenSquares);
+    player.visibility = computeNewBuildingVisibility(player.buildings);
+    const postVisible = getVisibleBuildings(opponent.buildings, player.visibility, this.buildingTakenSquares);
+    
+    player.socket.emit('update_buildings', {
+      type: 'add',
+      buildings: [...postVisible].filter(b => !preVisible.has(b)),
+    });
 
     // Check if new building is visible by opponent, send building update
+    if (getVisibleBuildings([building], opponent.visibility, this.buildingTakenSquares).size > 0) {
+      opponent.socket.emit('update_buildings', {
+        type: 'add',
+        buildings: [building],
+      });
+    }
   }
 
   delete(): void {
