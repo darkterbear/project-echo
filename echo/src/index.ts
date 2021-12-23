@@ -31,7 +31,7 @@ export const idToLoc = (id: number): [number, number] => [id % GRID_SIZE, Math.f
 export const flipLoc = (loc: [number, number]): [number, number] => [GRID_SIZE - 1 - loc[0], GRID_SIZE - 1 - loc[1]];
 
 export const computeNewBuildingVisibility = (friendlyBuildings: Building[]) => {
-  const visibility = new Set();
+  const visibility = new Set<number>();
   for (const building of friendlyBuildings) {
     switch (building.type) {
       case BuildingType.NEXUS:

@@ -16,7 +16,7 @@ export declare enum BuildingType {
 export declare const locToId: (loc: [number, number]) => number;
 export declare const idToLoc: (id: number) => [number, number];
 export declare const flipLoc: (loc: [number, number]) => [number, number];
-export declare const computeNewBuildingVisibility: (friendlyBuildings: Building[]) => Set<unknown>;
+export declare const computeNewBuildingVisibility: (friendlyBuildings: Building[]) => Set<number>;
 export declare const buildConflict: (takenSquares: Set<number>, visibility: Set<number>, hoverLocation: [number, number], type: BuildingType) => boolean;
 export declare const GRID_SIZE = 49;
 export declare const perspectiveNexus: Building;

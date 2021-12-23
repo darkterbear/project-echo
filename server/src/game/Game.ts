@@ -1,5 +1,5 @@
 import { randomId } from '../util';
-import { Building, BuildingType, getTerrain } from 'echo';
+import { Building, BuildingType, getTerrain, buildConflict, computeNewBuildingVisibility } from 'echo';
 import Player from './Player';
 
 export default class Game {
@@ -47,10 +47,18 @@ export default class Game {
 
   addBuilding(player: Player, position: [number, number], type: BuildingType): void {
     // Check if it conflicts with an existing building or terrain
+    if (buildConflict(this.buildingTakenSquares, player.visibility, position, type)) {
+      throw new Error('Building conflicts with existing terrain or building');
+    }
 
     // Add the building
+    const building = new Building(position, type);
+    player.buildings.push(building);
 
     // Update player visibility, send building updates for uncovered enemy buildings
+    const newVisibility = computeNewBuildingVisibility(player.buildings);
+    const newlyVisible = new Set([...newVisibility].filter(x => !player.visibility.has(x)));
+    const opponent = player.opponent();
 
     // Check if new building is visible by opponent, send building update
   }

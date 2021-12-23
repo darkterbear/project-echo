@@ -47,6 +47,14 @@ export default class Player {
     }
   }
 
+  opponent(): Player {
+    if (this.game) {
+      return this.game.player1 === this ? this.game.player2 : this.game.player1;
+    } else {
+      throw new Error('Player is not in a game');
+    }
+  }
+
   delete(): void {
     Player.players.delete(this.id);
   }
