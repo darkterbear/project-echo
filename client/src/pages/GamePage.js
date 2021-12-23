@@ -1,12 +1,12 @@
 import '../css/GamePage.scss';
-import { buildConflict, computeNewBuildingVisibility, getBuildingTakenSquares, getTerrain, GRID_SIZE, locToId, perspectiveNexus } from 'echo';
+import { buildConflict, computeNewBuildingVisibility, getBuildingTakenSquares, getTerrain, GRID_SIZE, locToId, perspectiveNexus, Building, idToLoc } from 'echo';
 import React, { useCallback, useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { Canvas } from '@react-three/fiber';
 import Plane from '../components/Plane';
 import CameraMover from '../components/CameraMover';
 import { GRID_LINE_COLOR, PLANE_THICKNESS, SKY_BLUE, keyToType } from '../util';
-import Building, { BuildingType } from '../components/Building';
+import BuildingComponent, { BuildingType } from '../components/Building';
 import { placeBuilding, socket } from '../api';
 
 const terrain = getTerrain();
@@ -14,20 +14,26 @@ const terrain = getTerrain();
 function GamePage() {
   const [friendlyBuildings, setFriendlyBuildings] = useState([perspectiveNexus]);
   const [hostileBuildings, setHostileBuildings] = useState([]);
-
+  
   const [buildingTakenSquares, setBuildingTakenSquares] = useState(getBuildingTakenSquares(terrain.concat(perspectiveNexus)));
   const [buildingVisibility, setBuildingVisibility] = useState(computeNewBuildingVisibility(friendlyBuildings));
   const [placingBuilding, setPlacingBuilding] = useState(null);
   const [hoverLocation, setHoverLocation] = useState([0, 0]);
 
+  const [cameraLocked, setCameraLocked] = useState(true);
+
   useEffect(() => {
     window.onkeydown = (e) => {
       setPlacingBuilding(keyToType(e.key));
+
+      if (e.key === 'y') {
+        setCameraLocked((prev) => !prev);
+      }
     }
 
-    console.log(socket)
-    socket.on('update_buildings', (type, buildings) => {
-      console.log('received building update', type, buildings);
+    socket.on('update_buildings', ({type, buildings}) => {
+      if (type === 'add')
+        setHostileBuildings((existing) => existing.concat(buildings));
     })
   }, []);
 
@@ -92,12 +98,13 @@ function GamePage() {
     <React.Fragment>
       <div id="info">
         { placingBuilding && <h1>Placing {placingBuilding}...</h1> }
+        { cameraLocked && <h1>Camera locked</h1> }
       </div>
       <Canvas shadows style={{ height: '100vh'}} camera={{ 
         rotation: [Math.PI / 6, 0, 0], 
         position: [0, 0 - (10 / Math.sqrt(3)), 10]
       }}>
-        <CameraMover speed={0.5} />
+        <CameraMover speed={0.5} locked={cameraLocked} />
         <color attach="background" args={[SKY_BLUE]} />
 
         <ambientLight intensity={0.75} />
@@ -114,11 +121,11 @@ function GamePage() {
           onClick={onClick}
         />
 
-        { placingBuilding && <Building showArea conflict={buildConflict(buildingTakenSquares, buildingVisibility, hoverLocation, placingBuilding)} pending={hoverLocation} type={placingBuilding} /> }
+        { placingBuilding && <BuildingComponent showArea conflict={buildConflict(buildingTakenSquares, buildingVisibility, hoverLocation, placingBuilding)} pending={hoverLocation} type={placingBuilding} /> }
         
-        { terrain.map(building => <Building showArea={placingBuilding} {...building} />) }
-        { friendlyBuildings.map(building => <Building showArea={placingBuilding} {...building} friendly />) }
-        { hostileBuildings.map(building => <Building showArea={placingBuilding} {...building} />) }
+        { terrain.map(building => <BuildingComponent key={locToId(building.position)} showArea={placingBuilding} {...building} friendly={false}/>) }
+        { friendlyBuildings.map(building => <BuildingComponent key={locToId(building.position)} showArea={placingBuilding} {...building} friendly />) }
+        { hostileBuildings.map(building => <BuildingComponent key={locToId(building.position)} showArea={placingBuilding} {...building} friendly={false}/>) }
       </Canvas>
     </React.Fragment>
   );

@@ -1,5 +1,5 @@
 import { randomId } from '../util';
-import { Building, BuildingType, getTerrain, buildConflict, computeNewBuildingVisibility, getVisibleBuildings } from 'echo';
+import { Building, BuildingType, getTerrain, buildConflict, computeNewBuildingVisibility, getVisibleBuildings, getBuildingTakenSquares, idToLoc, flipLoc } from 'echo';
 import Player from './Player';
 
 export default class Game {
@@ -41,6 +41,7 @@ export default class Game {
     this.player1 = null;
     this.player2 = null;
     this.terrain = getTerrain();
+    this.buildingTakenSquares = new Map();
 
     Game.games.set(this.id, this);
   }
@@ -55,22 +56,30 @@ export default class Game {
     const building = new Building(position, type);
     player.buildings.push(building);
 
+    // Update building taken squares
+    for (const entry of getBuildingTakenSquares([building])) {
+      this.buildingTakenSquares.set(entry[0], entry[1]);
+    }
+
     // Update player visibility, send building updates for uncovered enemy buildings
     const opponent = player.opponent();
-    const preVisible = getVisibleBuildings(opponent.buildings, player.visibility, this.buildingTakenSquares);
+    const preVisibleBuildings = getVisibleBuildings(opponent.buildings, player.visibility, this.buildingTakenSquares);
     player.visibility = computeNewBuildingVisibility(player.buildings);
-    const postVisible = getVisibleBuildings(opponent.buildings, player.visibility, this.buildingTakenSquares);
-    
-    player.socket.emit('update_buildings', {
-      type: 'add',
-      buildings: [...postVisible].filter(b => !preVisible.has(b)),
-    });
+    const postVisibleBuildings = getVisibleBuildings(opponent.buildings, player.visibility, this.buildingTakenSquares);
+    const newBuildings = [...postVisibleBuildings].filter(b => !preVisibleBuildings.has(b));
+
+    if (newBuildings.length > 0) {
+      player.socket.emit('update_buildings', {
+        type: 'add',
+        buildings: newBuildings,
+      });
+    }
 
     // Check if new building is visible by opponent, send building update
     if (getVisibleBuildings([building], opponent.visibility, this.buildingTakenSquares).size > 0) {
       opponent.socket.emit('update_buildings', {
         type: 'add',
-        buildings: [building],
+        buildings: [{ type: building.type, position: opponent.isPlayer2() ? flipLoc(building.position) : building.position }],
       });
     }
   }

@@ -191,8 +191,8 @@ export const getVisibleBuildings = (buildings: Building[], visibility: Set<numbe
   for (const id of visibility) {
     if (takenSquares.has(id)) {
       const building = takenSquares.get(id);
-      buildings.includes(building);
-      visibleBuildings.add(building);
+      if (buildings.includes(building))
+        visibleBuildings.add(building);
     }
   }
 

@@ -183,8 +183,8 @@ const getVisibleBuildings = (buildings, visibility, takenSquares) => {
     for (const id of visibility) {
         if (takenSquares.has(id)) {
             const building = takenSquares.get(id);
-            buildings.includes(building);
-            visibleBuildings.add(building);
+            if (buildings.includes(building))
+                visibleBuildings.add(building);
         }
     }
     return visibleBuildings;

@@ -18,6 +18,7 @@ export default function Plane({ dimensions, visibility, onCellHover, selectionEn
   }
 
   const handleDown = (e) => {
+    if (!selectionEnabled) return;
     e.stopPropagation();
     setMouseDownLocation(e.intersections[0].point);
     selectionMesh.current.scale.x = 0;
@@ -26,6 +27,7 @@ export default function Plane({ dimensions, visibility, onCellHover, selectionEn
   };
 
   const handleUp = (e) => {
+    if (!selectionEnabled) return;
     e.stopPropagation();
     setMouseDownLocation(null);
     selectionMesh.current.position.x = 1;
@@ -61,7 +63,7 @@ export default function Plane({ dimensions, visibility, onCellHover, selectionEn
         <planeGeometry args={[1,1]} />
         <meshStandardMaterial color={SELECTION_COLOR}/>
       </mesh>}
-      {Array.from(visibility).filter(id => id >= 0).map((id) => <mesh receiveShadow position={[...idToLoc(id), 0.005]}>
+      {Array.from(visibility).filter(id => id >= 0).map((id) => <mesh receiveShadow key={id} position={[...idToLoc(id), 0.005]}>
         <planeGeometry args={[1,1]} />
         <meshStandardMaterial color={VISIBLE_TILE_COLOR}/>
       </mesh>)}

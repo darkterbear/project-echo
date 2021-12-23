@@ -8,7 +8,6 @@ function WaitPage() {
 
   useEffect(() => {
     connectSocket();
-    console.log('socket connected', socket)
 
     socket.on('start_game', () => {
       navigate(`/${id}/game`);
