@@ -1,5 +1,5 @@
 import '../css/GamePage.scss';
-import { buildConflict, computeNewBuildingVisibility, getTerrain, GRID_SIZE, locToId, perspectiveNexus, PERSPECTIVE_DEFAULT_BUILDING_TAKEN_SQUARES } from 'echo';
+import { buildConflict, computeNewBuildingVisibility, getBuildingTakenSquares, getTerrain, GRID_SIZE, locToId, perspectiveNexus } from 'echo';
 import React, { useCallback, useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { Canvas } from '@react-three/fiber';
@@ -14,7 +14,7 @@ function GamePage() {
   const [friendlyBuildings, setFriendlyBuildings] = useState([perspectiveNexus]);
   const [hostileBuildings, setHostileBuildings] = useState([]);
 
-  const [buildingTakenSquares, setBuildingTakenSquares] = useState(PERSPECTIVE_DEFAULT_BUILDING_TAKEN_SQUARES);
+  const [buildingTakenSquares, setBuildingTakenSquares] = useState(getBuildingTakenSquares(terrain.concat(perspectiveNexus)));
   const [buildingVisibility, setBuildingVisibility] = useState(computeNewBuildingVisibility(friendlyBuildings));
   const [placingBuilding, setPlacingBuilding] = useState(null);
   const [hoverLocation, setHoverLocation] = useState([0, 0]);
@@ -32,20 +32,15 @@ function GamePage() {
   const onClick = (e) => {
     if (placingBuilding) {
       if (!buildConflict(buildingTakenSquares, buildingVisibility, hoverLocation, placingBuilding)) {
-        const newBuildingTakenSquares = new Set([...buildingTakenSquares])
-        const newBuildingVisibility = new Set([...buildingVisibility])
+        const newBuilding = new Building(hoverLocation, placingBuilding);
+        const newBuildingTakenSquares = new Map(buildingTakenSquares);
+
         switch (placingBuilding) {
           case BuildingType.NEXUS:
           case BuildingType.FARM:
             for (let x = -1; x <= 1; x++) {
               for (let y = -1; y <= 1; y++) {
-                newBuildingTakenSquares.add(locToId([hoverLocation[0] + x, hoverLocation[1] + y]));
-              }
-            }
-
-            for (let x = -4; x <= 4; x++) {
-              for (let y = -4; y <= 4; y++) {
-                newBuildingVisibility.add(locToId([hoverLocation[0] + x, hoverLocation[1] + y]));
+                newBuildingTakenSquares.set(locToId([hoverLocation[0] + x, hoverLocation[1] + y]), newBuilding);
               }
             }
             break;
@@ -55,18 +50,18 @@ function GamePage() {
           case BuildingType.TURRET:
             for (let x = -1; x <= 0; x++) {
               for (let y = 0; y <= 1; y++) {
-                newBuildingTakenSquares.add(locToId([hoverLocation[0] + x, hoverLocation[1] + y]));
+                newBuildingTakenSquares.set(locToId([hoverLocation[0] + x, hoverLocation[1] + y]), newBuilding);
               }
             }
             break;
           case BuildingType.WATCHTOWER:
-            newBuildingTakenSquares.add(locToId([hoverLocation[0], hoverLocation[1]]));
+            newBuildingTakenSquares.set(locToId([hoverLocation[0], hoverLocation[1]]), newBuilding);
             break;
           default:
             return;
         }
 
-        const newFriendlyBuildings = [...friendlyBuildings, { position: hoverLocation, type: placingBuilding }];
+        const newFriendlyBuildings = [...friendlyBuildings, newBuilding];
         setBuildingTakenSquares(newBuildingTakenSquares);
         setBuildingVisibility(computeNewBuildingVisibility(newFriendlyBuildings));
         setFriendlyBuildings(newFriendlyBuildings);

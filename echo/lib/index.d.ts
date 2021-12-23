@@ -17,16 +17,12 @@ export declare const locToId: (loc: [number, number]) => number;
 export declare const idToLoc: (id: number) => [number, number];
 export declare const flipLoc: (loc: [number, number]) => [number, number];
 export declare const computeNewBuildingVisibility: (friendlyBuildings: Building[]) => Set<number>;
-export declare const buildConflict: (takenSquares: Set<number>, visibility: Set<number>, hoverLocation: [number, number], type: BuildingType) => boolean;
+export declare const buildConflict: (takenSquares: Map<number, Building>, visibility: Set<number>, hoverLocation: [number, number], type: BuildingType) => boolean;
 export declare const GRID_SIZE = 49;
 export declare const perspectiveNexus: Building;
 export declare const player2Nexus: Building;
 export declare const getTerrain: () => Building[];
 /**
- * Player perspective of all squares taken by buildings/terrain at start. Does not include opponent nexus.
+ * Maps all occupied squares to the building that occupies them.
  */
-export declare const PERSPECTIVE_DEFAULT_BUILDING_TAKEN_SQUARES: Set<unknown>;
-/**
- * Server-side view of all squares that are taken by buildings/terrain at start (includes player 2 Nexus).
- */
-export declare const DEFAULT_BUILDING_TAKEN_SQUARES: Set<unknown>;
+export declare const getBuildingTakenSquares: (buildings: Building[]) => Map<number, Building>;

@@ -66,7 +66,7 @@ export const computeNewBuildingVisibility = (friendlyBuildings: Building[]) => {
   return visibility;
 }
 
-export const buildConflict = (takenSquares: Set<number>, visibility: Set<number>, hoverLocation: [number, number], type: BuildingType) => {
+export const buildConflict = (takenSquares: Map<number, Building>, visibility: Set<number>, hoverLocation: [number, number], type: BuildingType) => {
   switch (type) {
     case BuildingType.NEXUS:
     case BuildingType.FARM:
@@ -144,44 +144,37 @@ export const getTerrain = (): Building[] => [
 ];
 
 /**
- * Player perspective of all squares taken by buildings/terrain at start. Does not include opponent nexus.
+ * Maps all occupied squares to the building that occupies them.
  */
-export const PERSPECTIVE_DEFAULT_BUILDING_TAKEN_SQUARES = new Set();
-for (const b of getTerrain().concat(perspectiveNexus)) {
-  switch (b.type) {
-    case BuildingType.NEXUS:
-    case BuildingType.FARM:
-    case BuildingType.TERRAIN:
-      for (let x = -1; x <= 1; x++) {
-        for (let y = -1; y <= 1; y++) {
-          PERSPECTIVE_DEFAULT_BUILDING_TAKEN_SQUARES.add(locToId([b.position[0] + x, b.position[1] + y]));
+export const getBuildingTakenSquares = (buildings: Building[]): Map<number, Building> => {
+  const takenSquares = new Map<number, Building>();
+  for (const b of buildings) {
+    switch (b.type) {
+      case BuildingType.NEXUS:
+      case BuildingType.FARM:
+      case BuildingType.TERRAIN:
+        for (let x = -1; x <= 1; x++) {
+          for (let y = -1; y <= 1; y++) {
+            takenSquares.set(locToId([b.position[0] + x, b.position[1] + y]), b);
+          }
         }
-      }
-      break;
-    case BuildingType.POWER_PLANT:
-    case BuildingType.REFINERY:
-    case BuildingType.BARRACKS:
-    case BuildingType.TURRET:
-      for (let x = -1; x <= 0; x++) {
-        for (let y = 0; y <= 1; y++) {
-          PERSPECTIVE_DEFAULT_BUILDING_TAKEN_SQUARES.add(locToId([b.position[0] + x, b.position[1] + y]));
+        break;
+      case BuildingType.POWER_PLANT:
+      case BuildingType.REFINERY:
+      case BuildingType.BARRACKS:
+      case BuildingType.TURRET:
+        for (let x = -1; x <= 0; x++) {
+          for (let y = 0; y <= 1; y++) {
+            takenSquares.set(locToId([b.position[0] + x, b.position[1] + y]), b);
+          }
         }
-      }
-      break;
-    case BuildingType.WATCHTOWER:
-      PERSPECTIVE_DEFAULT_BUILDING_TAKEN_SQUARES.add(locToId([b.position[0], b.position[1]]));
-      break;
-    default:
-      break;
+        break;
+      case BuildingType.WATCHTOWER:
+        takenSquares.set(locToId([b.position[0], b.position[1]]), b);
+        break;
+      default:
+        break;
+    }
   }
-}
-
-/**
- * Server-side view of all squares that are taken by buildings/terrain at start (includes player 2 Nexus).
- */
-export const DEFAULT_BUILDING_TAKEN_SQUARES = new Set(PERSPECTIVE_DEFAULT_BUILDING_TAKEN_SQUARES);
-for (let x = -1; x <= 1; x++) {
-  for (let y = -1; y <= 1; y++) {
-    DEFAULT_BUILDING_TAKEN_SQUARES.add(locToId([player2Nexus.position[0] + x, player2Nexus.position[1] + y]));
-  }
+  return takenSquares;
 }

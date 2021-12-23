@@ -7,7 +7,7 @@ export default class Game {
   player1: Player;
   player2: Player;
   terrain: Building[];
-  buildingTakenSquares: Set<number>;
+  buildingTakenSquares: Map<number, Building>;
 
   private static games: Map<string, Game> = new Map();
 
