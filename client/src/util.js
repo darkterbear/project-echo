@@ -106,7 +106,6 @@ export const computeNewBuildingVisibility = (buildings) => {
 
 export const DEFAULT_BUILDING_VISIBLE_SQUARES = computeNewBuildingVisibility(DEFAULT_TERRAIN);
 
-// TODO: no building in hidden squares
 export const buildConflict = (takenSquares, visibility, hoverLocation, type) => {
   switch (type) {
     case BuildingType.NEXUS:

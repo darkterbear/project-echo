@@ -1,10 +1,13 @@
 import { Socket } from 'socket.io';
+import Building, { BuildingType } from './Building';
 import Game from './Game';
+import { flipLoc } from './util';
 
 export default class Player {
   id: string;
   game?: Game;
   socket?: Socket;
+  buildings: Building[];
 
   private static players: Map<string, Player> = new Map();
 
@@ -22,6 +25,7 @@ export default class Player {
    */
   constructor(id: string) {
     this.id = id;
+    this.buildings = [];
     Player.players.set(id, this);
   }
 
@@ -34,8 +38,10 @@ export default class Player {
 
     if (!game.player1) {
       game.player1 = this;
+      this.buildings = [new Building([4, 4], BuildingType.NEXUS)];
     } else if (!game.player2) {
       game.player2 = this;
+      this.buildings = [new Building(flipLoc([4, 4]), BuildingType.NEXUS)];
     } else {
       throw new Error('Game already has two players');
     }

@@ -52,4 +52,27 @@ export default function routes(app: Application, io: Server): void {
 
     res.status(200).end();
   });
+
+  app.post('/building', (req, res) => {
+    const id = req.sessionID;
+    const player = Player.getPlayer(id);
+
+    if (!player) {
+      return res.status(404).end();
+    }
+
+    const game = player.game;
+    if (!game) {
+      return res.status(404).end();
+    }
+
+    const { position, type } = req.body;
+    try {
+      game.addBuilding(player, position, type);
+    } catch (e) {
+      return res.status(400).end();
+    }
+
+    res.status(200).end();
+  });
 }

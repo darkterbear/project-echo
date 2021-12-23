@@ -1,10 +1,12 @@
 import { randomId } from '../util';
+import Building, { BuildingType, getTerrain } from './Building';
 import Player from './Player';
 
 export default class Game {
   id: string;
   player1: Player;
   player2: Player;
+  terrain: Building[];
 
   private static games: Map<string, Game> = new Map();
 
@@ -37,8 +39,19 @@ export default class Game {
     this.id = Game.generateId();
     this.player1 = null;
     this.player2 = null;
+    this.terrain = getTerrain();
 
     Game.games.set(this.id, this);
+  }
+
+  addBuilding(player: Player, position: [number, number], type: BuildingType): void {
+    // Check if it conflicts with an existing building or terrain
+
+    // Add the building
+
+    // Update player visibility, send building updates for uncovered enemy buildings
+
+    // Check if new building is visible by opponent, send building update
   }
 
   delete(): void {
