@@ -1,13 +1,15 @@
 import React from 'react';
+import { useNavigate } from 'react-router-dom';
 import { createGame } from '../api';
 
 function HomePage() {
 
+  const navigate = useNavigate();
   const onCreateGame = async () => {
     const res = await createGame();
     if (res.status === 200) {
       const { id } = await res.json();
-      window.location.href = `/${id}/wait`;
+      navigate(`/${id}/wait`);
     }
   }
 

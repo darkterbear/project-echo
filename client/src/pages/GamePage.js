@@ -7,6 +7,7 @@ import Plane from '../components/Plane';
 import CameraMover from '../components/CameraMover';
 import { GRID_LINE_COLOR, PLANE_THICKNESS, SKY_BLUE, keyToType } from '../util';
 import Building, { BuildingType } from '../components/Building';
+import { placeBuilding, socket } from '../api';
 
 const terrain = getTerrain();
 
@@ -23,13 +24,18 @@ function GamePage() {
     window.onkeydown = (e) => {
       setPlacingBuilding(keyToType(e.key));
     }
+
+    console.log(socket)
+    socket.on('update_buildings', (type, buildings) => {
+      console.log('received building update', type, buildings);
+    })
   }, []);
 
   const onCellHover = (x, y) => {
     setHoverLocation([x, y]);
   }
 
-  const onClick = (e) => {
+  const onClick = async (e) => {
     if (placingBuilding) {
       if (!buildConflict(buildingTakenSquares, buildingVisibility, hoverLocation, placingBuilding)) {
         const newBuilding = new Building(hoverLocation, placingBuilding);
@@ -61,11 +67,23 @@ function GamePage() {
             return;
         }
 
+        const oldBuildingTakenSquares = new Map(buildingTakenSquares);
+        const oldFriendlyBuildings = [...friendlyBuildings];
+
         const newFriendlyBuildings = [...friendlyBuildings, newBuilding];
         setBuildingTakenSquares(newBuildingTakenSquares);
         setBuildingVisibility(computeNewBuildingVisibility(newFriendlyBuildings));
         setFriendlyBuildings(newFriendlyBuildings);
         setPlacingBuilding(null);
+
+        const res = await placeBuilding(newBuilding.position, newBuilding.type);
+        if (res.status !== 200) {
+          // Didn't succeed, revert
+          console.error('Failed to place building', res.status);
+          setBuildingTakenSquares(oldBuildingTakenSquares);
+          setBuildingVisibility(computeNewBuildingVisibility(friendlyBuildings));
+          setFriendlyBuildings(oldFriendlyBuildings);
+        }
       }
     }
   }

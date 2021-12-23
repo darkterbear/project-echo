@@ -1,15 +1,17 @@
 import React, { useEffect } from 'react';
-import { useParams } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
 import { connectSocket, socket } from '../api';
 
 function WaitPage() {
   const { id } = useParams();
+  const navigate = useNavigate();
 
   useEffect(() => {
     connectSocket();
+    console.log('socket connected', socket)
 
     socket.on('start_game', () => {
-      window.location.href = `/${id}/game`;
+      navigate(`/${id}/game`);
     });
   }, []);
 

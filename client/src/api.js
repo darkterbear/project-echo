@@ -23,6 +23,17 @@ export const joinGame = (id) => {
   });
 }
 
+export const placeBuilding = (position, type) => {
+  return fetch(`${BASE_URL}/building`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify({ position, type }),
+    credentials: 'include'
+  });
+}
+
 export let socket = null;
 export const connectSocket = () => {
   socket = io(BASE_URL, { withCredentials: true });
