@@ -1,6 +1,8 @@
 import { io } from 'socket.io-client';
 
-const BASE_URL = 'http://localhost:3005';
+const BASE_URL = process.env.NODE_ENV === 'production'
+  ? 'https://echo-api.terranceli.com'
+  : 'http://localhost:3005';
 
 export const createGame = () => {
   return fetch(`${BASE_URL}/create_game`, {

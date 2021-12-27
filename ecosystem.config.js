@@ -10,6 +10,7 @@ module.exports = {
       autorestart: true,
       watch: false,
       env: {
+        PORT: "3005",
         TS_NODE_PROJECT: "tsconfig.json"
       }
     },
