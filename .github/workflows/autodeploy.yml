@@ -37,7 +37,13 @@ jobs:
           KEY: ${{ secrets.SSH_KEY }}
         with:
           port: 22
-          args: --script "'cd project-echo/ && git pull && npx pm2 startOrReload ecosystem.config.js'"
+          script: |
+            source .bashrc
+            cd project-echo/
+            git pull
+            scripts/install.sh
+            scripts/build.sh
+            pm2 startOrReload ecosystem.config.js
 #       - name: Purge Cloudflare cache
 #         uses: jakejarvis/cloudflare-purge-action@master
 #         if: success()
