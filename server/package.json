@@ -2,7 +2,7 @@
   "name": "server",
   "version": "1.0.0",
   "scripts": {
-    "start": "tsc && PORT=3000 node build/app.js",
+    "start": "tsc && PORT=3005 node build/app.js",
     "build": "tsc"
   },
   "dependencies": {

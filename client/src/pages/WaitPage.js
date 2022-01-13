@@ -9,8 +9,8 @@ function WaitPage() {
   useEffect(() => {
     connectSocket();
 
-    socket.on('start_game', () => {
-      navigate(`/${id}/game`);
+    socket.on('start_game', (p2) => {
+      navigate(`/${id}/game`, { state: { p2 } });
     });
   }, []);
 

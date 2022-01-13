@@ -1,7 +1,7 @@
 import '../css/GamePage.scss';
-import { buildConflict, computeNewBuildingVisibility, getBuildingTakenSquares, getTerrain, GRID_SIZE, locToId, perspectiveNexus, Building, idToLoc } from 'echo';
+import { buildConflict, computeNewBuildingVisibility, getBuildingTakenSquares, getTerrain, GRID_SIZE, locToId, perspectiveNexus, Building, idToLoc, player2Nexus, player1Nexus } from 'echo';
 import React, { useCallback, useEffect, useState } from 'react';
-import { useParams } from 'react-router-dom';
+import { useLocation, useParams } from 'react-router-dom';
 import { Canvas } from '@react-three/fiber';
 import Plane from '../components/Plane';
 import CameraMover from '../components/CameraMover';
@@ -12,10 +12,13 @@ import { placeBuilding, socket } from '../api';
 const terrain = getTerrain();
 
 function GamePage() {
-  const [friendlyBuildings, setFriendlyBuildings] = useState([perspectiveNexus]);
+  const { state: { p2 } } = useLocation();
+
+  const friendlyNexus = p2 ? player2Nexus : player1Nexus
+  const [friendlyBuildings, setFriendlyBuildings] = useState([friendlyNexus]);
   const [hostileBuildings, setHostileBuildings] = useState([]);
   
-  const [buildingTakenSquares, setBuildingTakenSquares] = useState(getBuildingTakenSquares(terrain.concat(perspectiveNexus)));
+  const [buildingTakenSquares, setBuildingTakenSquares] = useState(getBuildingTakenSquares(terrain.concat(friendlyNexus)));
   const [buildingVisibility, setBuildingVisibility] = useState(computeNewBuildingVisibility(friendlyBuildings));
   const [placingBuilding, setPlacingBuilding] = useState(null);
   const [hoverLocation, setHoverLocation] = useState([0, 0]);
@@ -102,7 +105,7 @@ function GamePage() {
       </div>
       <Canvas shadows style={{ height: '100vh'}} camera={{ 
         rotation: [Math.PI / 6, 0, 0], 
-        position: [0, 0 - (10 / Math.sqrt(3)), 10]
+        position: [p2 ? 48 : 0, (p2 ? 48 : 0) - (10 / Math.sqrt(3)), 10]
       }}>
         <CameraMover speed={0.5} locked={cameraLocked} />
         <color attach="background" args={[SKY_BLUE]} />

@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.getVisibleBuildings = exports.getBuildingTakenSquares = exports.getTerrain = exports.player2Nexus = exports.perspectiveNexus = exports.GRID_SIZE = exports.buildConflict = exports.computeNewBuildingVisibility = exports.flipLoc = exports.idToLoc = exports.locToId = exports.BuildingType = exports.Building = void 0;
+exports.getVisibleBuildings = exports.getBuildingTakenSquares = exports.getTerrain = exports.player2Nexus = exports.player1Nexus = exports.GRID_SIZE = exports.buildConflict = exports.computeNewBuildingVisibility = exports.idToLoc = exports.locToId = exports.BuildingType = exports.Building = void 0;
 class Building {
     constructor(position, type) {
         this.position = position;
@@ -28,8 +28,6 @@ const locToId = (loc) => {
 exports.locToId = locToId;
 const idToLoc = (id) => [id % exports.GRID_SIZE, Math.floor(id / exports.GRID_SIZE)];
 exports.idToLoc = idToLoc;
-const flipLoc = (loc) => [exports.GRID_SIZE - 1 - loc[0], exports.GRID_SIZE - 1 - loc[1]];
-exports.flipLoc = flipLoc;
 const computeNewBuildingVisibility = (friendlyBuildings) => {
     const visibility = new Set();
     for (const building of friendlyBuildings) {
@@ -117,7 +115,7 @@ const buildConflict = (takenSquares, visibility, hoverLocation, type) => {
 };
 exports.buildConflict = buildConflict;
 exports.GRID_SIZE = 49;
-exports.perspectiveNexus = new Building([4, 4], BuildingType.NEXUS);
+exports.player1Nexus = new Building([4, 4], BuildingType.NEXUS);
 exports.player2Nexus = new Building([44, 44], BuildingType.NEXUS);
 const getTerrain = () => [
     new Building([9, 24], BuildingType.TERRAIN),

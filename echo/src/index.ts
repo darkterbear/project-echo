@@ -28,8 +28,6 @@ export const locToId = (loc: [number, number]): number => {
 
 export const idToLoc = (id: number): [number, number] => [id % GRID_SIZE, Math.floor(id / GRID_SIZE)];
 
-export const flipLoc = (loc: [number, number]): [number, number] => [GRID_SIZE - 1 - loc[0], GRID_SIZE - 1 - loc[1]];
-
 export const computeNewBuildingVisibility = (friendlyBuildings: Building[]) => {
   const visibility = new Set<number>();
   for (const building of friendlyBuildings) {
@@ -123,7 +121,7 @@ export const buildConflict = (takenSquares: Map<number, Building>, visibility: S
 
 export const GRID_SIZE = 49;
 
-export const perspectiveNexus = new Building([4, 4], BuildingType.NEXUS);
+export const player1Nexus = new Building([4, 4], BuildingType.NEXUS);
 export const player2Nexus = new Building([44, 44], BuildingType.NEXUS);
 
 export const getTerrain = (): Building[] => [

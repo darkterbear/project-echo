@@ -2,7 +2,6 @@ import { Application } from 'express';
 import Game from './game/Game';
 import Player from './game/Player';
 import { Server } from 'socket.io';
-import { flipLoc } from '../../echo/lib';
 
 export default function routes(app: Application, io: Server): void {
   app.post('/create_game', (req, res) => {
@@ -67,8 +66,7 @@ export default function routes(app: Application, io: Server): void {
       return res.status(404).end();
     }
 
-    const position = player.isPlayer2() ? flipLoc(req.body.position) : req.body.position;
-    const type = req.body.type;
+    const { position, type } = req.body;
 
     try {
       game.addBuilding(player, position, type);

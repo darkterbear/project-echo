@@ -1,5 +1,5 @@
 import { randomId } from '../util';
-import { Building, BuildingType, getTerrain, buildConflict, computeNewBuildingVisibility, getVisibleBuildings, getBuildingTakenSquares, idToLoc, flipLoc } from 'echo';
+import { Building, BuildingType, getTerrain, buildConflict, computeNewBuildingVisibility, getVisibleBuildings, getBuildingTakenSquares } from 'echo';
 import Player from './Player';
 
 export default class Game {
@@ -79,7 +79,7 @@ export default class Game {
     if (getVisibleBuildings([building], opponent.visibility, this.buildingTakenSquares).size > 0) {
       opponent.socket.emit('update_buildings', {
         type: 'add',
-        buildings: [{ type: building.type, position: opponent.isPlayer2() ? flipLoc(building.position) : building.position }],
+        buildings: [building],
       });
     }
   }

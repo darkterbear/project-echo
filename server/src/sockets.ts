@@ -36,8 +36,8 @@ export default function sockets(
 
     // Check if both players are connected
     if (game.player1 && game.player2) {
-      game.player1.socket.emit('start_game');
-      game.player2.socket.emit('start_game');
+      game.player1.socket.emit('start_game', false);
+      game.player2.socket.emit('start_game', true);
     }
 
     // Delete both players and the game on disconnect
