@@ -1,7 +1,8 @@
 import { randomId } from '../util';
-import { Building as BaseBuilding, BuildingType, getTerrain, buildConflict, computeNewBuildingVisibility, getVisibleBuildings, getBuildingTakenSquares } from 'echo';
+import { Building as BaseBuilding, BuildingType, getTerrain, buildConflict, computeNewBuildingVisibility, getVisibleBuildings, getBuildingTakenSquares, sufficientResources, ResourceSet } from 'echo';
 import Building from './Building';
 import Player from './Player';
+import sockets from 'sockets';
 
 export default class Game {
   id: string;
@@ -53,9 +54,15 @@ export default class Game {
       throw new Error('Building conflicts with existing terrain or building');
     }
 
+    if (!sufficientResources(type, player.resources)) {
+      throw new Error('Insufficient resources');
+    }
+
     // Add the building
     const building = new Building(position, type, player);
     player.buildings.push(building);
+    player.resources.deduct(ResourceSet.BUILDING_COSTS[type]);
+    player.socket.emit('update_resources', player.resources);
 
     // Update building taken squares
     for (const entry of getBuildingTakenSquares([building])) {

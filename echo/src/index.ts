@@ -8,6 +8,17 @@ export class Building {
   }
 }
 
+export enum BuildingType {
+  NEXUS = 'nexus',
+  POWER_PLANT = 'powerPlant',
+  FARM = 'farm',
+  REFINERY = 'refinery',
+  BARRACKS = 'barracks',
+  TURRET = 'turret',
+  WATCHTOWER = 'watchtower',
+  TERRAIN = 'terrain',
+}
+
 export class ResourceSet {
   food: number;
   steel: number;
@@ -24,17 +35,25 @@ export class ResourceSet {
     this.steel = Math.min(this.steel, max.steel);
     this.energy = Math.min(this.energy, max.energy);
   }
-}
 
-export enum BuildingType {
-  NEXUS = 'nexus',
-  POWER_PLANT = 'powerPlant',
-  FARM = 'farm',
-  REFINERY = 'refinery',
-  BARRACKS = 'barracks',
-  TURRET = 'turret',
-  WATCHTOWER = 'watchtower',
-  TERRAIN = 'terrain',
+  sufficient(cost: ResourceSet) {
+    return this.food >= cost.food && this.steel >= cost.steel && this.energy >= cost.energy;
+  }
+
+  deduct(cost: ResourceSet) {
+    this.food -= cost.food;
+    this.steel -= cost.steel;
+    this.energy -= cost.energy;
+  }
+
+  static BUILDING_COSTS: { [key in BuildingType]?: ResourceSet } = {
+    [BuildingType.POWER_PLANT]: new ResourceSet(1, 3, 2),
+    [BuildingType.FARM]:        new ResourceSet(3, 1, 2),
+    [BuildingType.REFINERY]:    new ResourceSet(2, 2, 2),
+    [BuildingType.BARRACKS]:    new ResourceSet(3, 1, 2),
+    [BuildingType.TURRET]:      new ResourceSet(2, 5, 5),
+    [BuildingType.WATCHTOWER]:  new ResourceSet(0, 4, 2),
+  };
 }
 
 export const locToId = (loc: [number, number]): number => {
@@ -80,6 +99,10 @@ export const computeNewBuildingVisibility = (friendlyBuildings: Building[]) => {
     }
   }
   return visibility;
+}
+
+export const sufficientResources = (type: BuildingType, resources: ResourceSet): boolean => {
+  return type in ResourceSet.BUILDING_COSTS && resources.sufficient(ResourceSet.BUILDING_COSTS[type]);
 }
 
 export const buildConflict = (takenSquares: Map<number, Building>, visibility: Set<number>, hoverLocation: [number, number], type: BuildingType) => {

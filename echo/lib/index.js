@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.getMaxResources = exports.getVisibleBuildings = exports.getBuildingTakenSquares = exports.getTerrain = exports.player2Nexus = exports.player1Nexus = exports.GRID_SIZE = exports.buildConflict = exports.computeNewBuildingVisibility = exports.idToLoc = exports.locToId = exports.BuildingType = exports.ResourceSet = exports.Building = void 0;
+exports.getMaxResources = exports.getVisibleBuildings = exports.getBuildingTakenSquares = exports.getTerrain = exports.player2Nexus = exports.player1Nexus = exports.GRID_SIZE = exports.buildConflict = exports.sufficientResources = exports.computeNewBuildingVisibility = exports.idToLoc = exports.locToId = exports.ResourceSet = exports.BuildingType = exports.Building = void 0;
 class Building {
     constructor(position, type) {
         this.position = position;
@@ -8,19 +8,6 @@ class Building {
     }
 }
 exports.Building = Building;
-class ResourceSet {
-    constructor(food = 0, steel = 0, energy = 0) {
-        this.food = food;
-        this.steel = steel;
-        this.energy = energy;
-    }
-    capMax(max) {
-        this.food = Math.min(this.food, max.food);
-        this.steel = Math.min(this.steel, max.steel);
-        this.energy = Math.min(this.energy, max.energy);
-    }
-}
-exports.ResourceSet = ResourceSet;
 var BuildingType;
 (function (BuildingType) {
     BuildingType["NEXUS"] = "nexus";
@@ -32,6 +19,35 @@ var BuildingType;
     BuildingType["WATCHTOWER"] = "watchtower";
     BuildingType["TERRAIN"] = "terrain";
 })(BuildingType = exports.BuildingType || (exports.BuildingType = {}));
+class ResourceSet {
+    constructor(food = 0, steel = 0, energy = 0) {
+        this.food = food;
+        this.steel = steel;
+        this.energy = energy;
+    }
+    capMax(max) {
+        this.food = Math.min(this.food, max.food);
+        this.steel = Math.min(this.steel, max.steel);
+        this.energy = Math.min(this.energy, max.energy);
+    }
+    sufficient(cost) {
+        return this.food >= cost.food && this.steel >= cost.steel && this.energy >= cost.energy;
+    }
+    deduct(cost) {
+        this.food -= cost.food;
+        this.steel -= cost.steel;
+        this.energy -= cost.energy;
+    }
+}
+exports.ResourceSet = ResourceSet;
+ResourceSet.BUILDING_COSTS = {
+    [BuildingType.POWER_PLANT]: new ResourceSet(1, 3, 2),
+    [BuildingType.FARM]: new ResourceSet(3, 1, 2),
+    [BuildingType.REFINERY]: new ResourceSet(2, 2, 2),
+    [BuildingType.BARRACKS]: new ResourceSet(3, 1, 2),
+    [BuildingType.TURRET]: new ResourceSet(2, 5, 5),
+    [BuildingType.WATCHTOWER]: new ResourceSet(0, 4, 2),
+};
 const locToId = (loc) => {
     if (loc[0] < 0 || loc[1] < 0 || loc[0] >= exports.GRID_SIZE || loc[1] >= exports.GRID_SIZE) {
         return -1;
@@ -77,6 +93,10 @@ const computeNewBuildingVisibility = (friendlyBuildings) => {
     return visibility;
 };
 exports.computeNewBuildingVisibility = computeNewBuildingVisibility;
+const sufficientResources = (type, resources) => {
+    return type in ResourceSet.BUILDING_COSTS && resources.sufficient(ResourceSet.BUILDING_COSTS[type]);
+};
+exports.sufficientResources = sufficientResources;
 const buildConflict = (takenSquares, visibility, hoverLocation, type) => {
     switch (type) {
         case BuildingType.NEXUS:

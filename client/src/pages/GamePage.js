@@ -1,5 +1,5 @@
 import '../css/GamePage.scss';
-import { buildConflict, computeNewBuildingVisibility, getBuildingTakenSquares, getTerrain, GRID_SIZE, locToId, perspectiveNexus, Building, idToLoc, player2Nexus, player1Nexus, getMaxResources, ResourceSet } from 'echo';
+import { buildConflict, computeNewBuildingVisibility, getBuildingTakenSquares, getTerrain, GRID_SIZE, locToId, perspectiveNexus, Building, idToLoc, player2Nexus, player1Nexus, getMaxResources, ResourceSet, sufficientResources } from 'echo';
 import React, { useCallback, useEffect, useState } from 'react';
 import { useLocation, useParams } from 'react-router-dom';
 import { Canvas } from '@react-three/fiber';
@@ -41,7 +41,11 @@ function GamePage() {
     socket.on('update_buildings', ({type, buildings}) => {
       if (type === 'add')
         setHostileBuildings((existing) => existing.concat(buildings));
-    })
+    });
+
+    socket.on('update_resources', (resources) => {
+      setResources(new ResourceSet(resources.food, resources.steel, resources.energy));
+    });
   }, []);
 
   const onCellHover = (x, y) => {
@@ -50,7 +54,7 @@ function GamePage() {
 
   const onClick = async (e) => {
     if (placingBuilding) {
-      if (!buildConflict(buildingTakenSquares, buildingVisibility, hoverLocation, placingBuilding)) {
+      if (!buildConflict(buildingTakenSquares, buildingVisibility, hoverLocation, placingBuilding) && sufficientResources(placingBuilding, resources)) {
         const newBuilding = new Building(hoverLocation, placingBuilding);
         const newBuildingTakenSquares = new Map(buildingTakenSquares);
 
