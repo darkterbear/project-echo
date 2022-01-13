@@ -14,6 +14,11 @@ class ResourceSet {
         this.steel = steel;
         this.energy = energy;
     }
+    capMax(max) {
+        this.food = Math.min(this.food, max.food);
+        this.steel = Math.min(this.steel, max.steel);
+        this.energy = Math.min(this.energy, max.energy);
+    }
 }
 exports.ResourceSet = ResourceSet;
 var BuildingType;
@@ -197,11 +202,7 @@ const getVisibleBuildings = (buildings, visibility, takenSquares) => {
 };
 exports.getVisibleBuildings = getVisibleBuildings;
 const getMaxResources = (buildings) => {
-    const max = {
-        energy: 0,
-        food: 0,
-        steel: 0
-    };
+    const max = new ResourceSet();
     for (const b of buildings) {
         switch (b.type) {
             case BuildingType.NEXUS:
@@ -221,8 +222,8 @@ const getMaxResources = (buildings) => {
             default:
                 break;
         }
-        return max;
     }
+    return max;
 };
 exports.getMaxResources = getMaxResources;
 //# sourceMappingURL=index.js.map

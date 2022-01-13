@@ -1,6 +1,7 @@
 import { Socket } from 'socket.io';
 import Game from './Game';
-import { Building, BuildingType, computeNewBuildingVisibility, getBuildingTakenSquares, ResourceSet } from 'echo';
+import { BuildingType, computeNewBuildingVisibility, getBuildingTakenSquares, ResourceSet } from 'echo';
+import Building from './Building';
 
 export default class Player {
   id: string;
@@ -40,12 +41,15 @@ export default class Player {
 
     if (!game.player1) {
       game.player1 = this;
-      this.buildings = [new Building([4, 4], BuildingType.NEXUS)];
+      
       this.visibility = computeNewBuildingVisibility(this.buildings);
     } else if (!game.player2) {
       game.player2 = this;
-      this.buildings = [new Building([44, 44], BuildingType.NEXUS)];
+      this.buildings = [new Building([44, 44], BuildingType.NEXUS, this)];
       this.visibility = computeNewBuildingVisibility(this.buildings);
+
+      game.player1.buildings = [new Building([4, 4], BuildingType.NEXUS, game.player1)];
+      game.player1.visibility = computeNewBuildingVisibility(game.player1.buildings);
 
       // Initialize building taken squares
       game.buildingTakenSquares = getBuildingTakenSquares(game.terrain.concat(this.buildings).concat(game.player1.buildings));

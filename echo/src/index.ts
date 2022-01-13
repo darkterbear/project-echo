@@ -18,6 +18,12 @@ export class ResourceSet {
     this.steel = steel;
     this.energy = energy;
   }
+
+  capMax(max: ResourceSet) {
+    this.food = Math.min(this.food, max.food);
+    this.steel = Math.min(this.steel, max.steel);
+    this.energy = Math.min(this.energy, max.energy);
+  }
 }
 
 export enum BuildingType {
@@ -209,12 +215,8 @@ export const getVisibleBuildings = (buildings: Building[], visibility: Set<numbe
   return visibleBuildings;
 }
 
-export const getMaxResources = (buildings: Building[]) => {
-  const max = {
-    energy: 0,
-    food: 0,
-    steel: 0
-  };
+export const getMaxResources = (buildings: Building[]): ResourceSet => {
+  const max = new ResourceSet();
 
   for (const b of buildings) {
     switch(b.type) {
@@ -235,6 +237,7 @@ export const getMaxResources = (buildings: Building[]) => {
       default:
         break;
     }
-    return max;
   }
+
+  return max;
 };

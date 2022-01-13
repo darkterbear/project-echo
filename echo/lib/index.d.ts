@@ -8,6 +8,7 @@ export declare class ResourceSet {
     steel: number;
     energy: number;
     constructor(food?: number, steel?: number, energy?: number);
+    capMax(max: ResourceSet): void;
 }
 export declare enum BuildingType {
     NEXUS = "nexus",
@@ -38,8 +39,4 @@ export declare const getBuildingTakenSquares: (buildings: Building[]) => Map<num
  * @returns Array of buildings that are at least partially visible in visibility and are part of buildings
  */
 export declare const getVisibleBuildings: (buildings: Building[], visibility: Set<number>, takenSquares: Map<number, Building>) => Set<Building>;
-export declare const getMaxResources: (buildings: Building[]) => {
-    energy: number;
-    food: number;
-    steel: number;
-};
+export declare const getMaxResources: (buildings: Building[]) => ResourceSet;

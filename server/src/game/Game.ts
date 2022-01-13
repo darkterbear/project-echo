@@ -1,5 +1,6 @@
 import { randomId } from '../util';
-import { Building, BuildingType, getTerrain, buildConflict, computeNewBuildingVisibility, getVisibleBuildings, getBuildingTakenSquares } from 'echo';
+import { Building as BaseBuilding, BuildingType, getTerrain, buildConflict, computeNewBuildingVisibility, getVisibleBuildings, getBuildingTakenSquares } from 'echo';
+import Building from './Building';
 import Player from './Player';
 
 export default class Game {
@@ -7,7 +8,7 @@ export default class Game {
   player1: Player;
   player2: Player;
   terrain: Building[];
-  buildingTakenSquares: Map<number, Building>;
+  buildingTakenSquares: Map<number, BaseBuilding>;
 
   private static games: Map<string, Game> = new Map();
 
@@ -53,7 +54,7 @@ export default class Game {
     }
 
     // Add the building
-    const building = new Building(position, type);
+    const building = new Building(position, type, player);
     player.buildings.push(building);
 
     // Update building taken squares
