@@ -196,3 +196,33 @@ export const getVisibleBuildings = (buildings: Building[], visibility: Set<numbe
 
   return visibleBuildings;
 }
+
+export const getMaxResources = (buildings: Building[]) => {
+  const max = {
+    energy: 0,
+    food: 0,
+    steel: 0
+  };
+
+  for (const b of buildings) {
+    switch(b.type) {
+      case BuildingType.NEXUS:
+        max.energy += 10;
+        max.food += 10;
+        max.steel += 10;
+        break;
+      case BuildingType.FARM:
+        max.food += 10;
+        break;
+      case BuildingType.POWER_PLANT:
+        max.energy += 10;
+        break;
+      case BuildingType.REFINERY:
+        max.steel += 10;
+        break;
+      default:
+        break;
+    }
+    return max;
+  }
+};

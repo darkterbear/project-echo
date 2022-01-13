@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.getVisibleBuildings = exports.getBuildingTakenSquares = exports.getTerrain = exports.player2Nexus = exports.player1Nexus = exports.GRID_SIZE = exports.buildConflict = exports.computeNewBuildingVisibility = exports.idToLoc = exports.locToId = exports.BuildingType = exports.Building = void 0;
+exports.getMaxResources = exports.getVisibleBuildings = exports.getBuildingTakenSquares = exports.getTerrain = exports.player2Nexus = exports.player1Nexus = exports.GRID_SIZE = exports.buildConflict = exports.computeNewBuildingVisibility = exports.idToLoc = exports.locToId = exports.BuildingType = exports.Building = void 0;
 class Building {
     constructor(position, type) {
         this.position = position;
@@ -188,4 +188,33 @@ const getVisibleBuildings = (buildings, visibility, takenSquares) => {
     return visibleBuildings;
 };
 exports.getVisibleBuildings = getVisibleBuildings;
+const getMaxResources = (buildings) => {
+    const max = {
+        energy: 0,
+        food: 0,
+        steel: 0
+    };
+    for (const b of buildings) {
+        switch (b.type) {
+            case BuildingType.NEXUS:
+                max.energy += 10;
+                max.food += 10;
+                max.steel += 10;
+                break;
+            case BuildingType.FARM:
+                max.food += 10;
+                break;
+            case BuildingType.POWER_PLANT:
+                max.energy += 10;
+                break;
+            case BuildingType.REFINERY:
+                max.steel += 10;
+                break;
+            default:
+                break;
+        }
+        return max;
+    }
+};
+exports.getMaxResources = getMaxResources;
 //# sourceMappingURL=index.js.map

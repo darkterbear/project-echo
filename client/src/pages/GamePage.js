@@ -1,5 +1,5 @@
 import '../css/GamePage.scss';
-import { buildConflict, computeNewBuildingVisibility, getBuildingTakenSquares, getTerrain, GRID_SIZE, locToId, perspectiveNexus, Building, idToLoc, player2Nexus, player1Nexus } from 'echo';
+import { buildConflict, computeNewBuildingVisibility, getBuildingTakenSquares, getTerrain, GRID_SIZE, locToId, perspectiveNexus, Building, idToLoc, player2Nexus, player1Nexus, getMaxResources } from 'echo';
 import React, { useCallback, useEffect, useState } from 'react';
 import { useLocation, useParams } from 'react-router-dom';
 import { Canvas } from '@react-three/fiber';
@@ -8,6 +8,7 @@ import CameraMover from '../components/CameraMover';
 import { GRID_LINE_COLOR, PLANE_THICKNESS, SKY_BLUE, keyToType } from '../util';
 import BuildingComponent, { BuildingType } from '../components/Building';
 import { placeBuilding, socket } from '../api';
+import Resource from '../components/Resource';
 
 const terrain = getTerrain();
 
@@ -17,6 +18,13 @@ function GamePage() {
   const friendlyNexus = p2 ? player2Nexus : player1Nexus
   const [friendlyBuildings, setFriendlyBuildings] = useState([friendlyNexus]);
   const [hostileBuildings, setHostileBuildings] = useState([]);
+
+  const maxResources = getMaxResources(friendlyBuildings);
+  const [resources, setResources] = useState({
+    energy: 0,
+    food: 0,
+    steel: 0
+  });
   
   const [buildingTakenSquares, setBuildingTakenSquares] = useState(getBuildingTakenSquares(terrain.concat(friendlyNexus)));
   const [buildingVisibility, setBuildingVisibility] = useState(computeNewBuildingVisibility(friendlyBuildings));
@@ -102,6 +110,11 @@ function GamePage() {
       <div id="info">
         { placingBuilding && <h1>Placing {placingBuilding}...</h1> }
         { cameraLocked && <h1>Camera locked</h1> }
+      </div>
+      <div id="resources">
+        <Resource resource="Energy" amount={resources.energy} max={maxResources.energy} />
+        <Resource resource="Steel" amount={resources.steel} max={maxResources.steel} />
+        <Resource resource="Food" amount={resources.food} max={maxResources.food} />
       </div>
       <Canvas shadows style={{ height: '100vh'}} camera={{ 
         rotation: [Math.PI / 6, 0, 0], 

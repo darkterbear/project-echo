@@ -32,3 +32,8 @@ export declare const getBuildingTakenSquares: (buildings: Building[]) => Map<num
  * @returns Array of buildings that are at least partially visible in visibility and are part of buildings
  */
 export declare const getVisibleBuildings: (buildings: Building[], visibility: Set<number>, takenSquares: Map<number, Building>) => Set<Building>;
+export declare const getMaxResources: (buildings: Building[]) => {
+    energy: number;
+    food: number;
+    steel: number;
+};

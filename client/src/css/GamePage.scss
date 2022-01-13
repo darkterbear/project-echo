@@ -6,3 +6,41 @@
 
   z-index: 100;
 }
+
+#resources {
+  position: fixed;
+  top: 1rem;
+  left: 1rem;
+  z-index: 100;
+
+  .resource-bar {
+    background: white;
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+
+    padding: 0.25rem;
+    margin: 0.25rem 0;
+
+    h3, h5 {
+      margin: 0;
+    }
+
+    h5 {
+      color: #aaa;
+      align-self: flex-end;
+    }
+
+    .resource-max {
+      border: 2px solid black;
+      width: 100px;
+      height: 12px;
+      margin: 0 0.25rem 0 0.5rem;
+
+      .resource-amt {
+        background: black;
+        height: 12px;
+      }
+    }
+  }
+}
