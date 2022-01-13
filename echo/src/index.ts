@@ -8,6 +8,18 @@ export class Building {
   }
 }
 
+export class ResourceSet {
+  food: number;
+  steel: number;
+  energy: number;
+
+  constructor(food: number = 0, steel: number = 0, energy: number = 0) {
+    this.food = food;
+    this.steel = steel;
+    this.energy = energy;
+  }
+}
+
 export enum BuildingType {
   NEXUS = 'nexus',
   POWER_PLANT = 'powerPlant',

@@ -3,6 +3,12 @@ export declare class Building {
     type: BuildingType;
     constructor(position: [number, number], type: BuildingType);
 }
+export declare class ResourceSet {
+    food: number;
+    steel: number;
+    energy: number;
+    constructor(food?: number, steel?: number, energy?: number);
+}
 export declare enum BuildingType {
     NEXUS = "nexus",
     POWER_PLANT = "powerPlant",

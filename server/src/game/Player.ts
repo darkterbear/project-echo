@@ -1,12 +1,13 @@
 import { Socket } from 'socket.io';
 import Game from './Game';
-import { Building, BuildingType, computeNewBuildingVisibility, getBuildingTakenSquares } from 'echo';
+import { Building, BuildingType, computeNewBuildingVisibility, getBuildingTakenSquares, ResourceSet } from 'echo';
 
 export default class Player {
   id: string;
   game?: Game;
   socket?: Socket;
   buildings: Building[];
+  resources: ResourceSet;
   visibility: Set<number>;
 
   private static players: Map<string, Player> = new Map();
@@ -26,6 +27,7 @@ export default class Player {
   constructor(id: string) {
     this.id = id;
     this.buildings = [];
+    this.resources = new ResourceSet();
     Player.players.set(id, this);
   }
 

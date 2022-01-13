@@ -1,5 +1,5 @@
 import '../css/GamePage.scss';
-import { buildConflict, computeNewBuildingVisibility, getBuildingTakenSquares, getTerrain, GRID_SIZE, locToId, perspectiveNexus, Building, idToLoc, player2Nexus, player1Nexus, getMaxResources } from 'echo';
+import { buildConflict, computeNewBuildingVisibility, getBuildingTakenSquares, getTerrain, GRID_SIZE, locToId, perspectiveNexus, Building, idToLoc, player2Nexus, player1Nexus, getMaxResources, ResourceSet } from 'echo';
 import React, { useCallback, useEffect, useState } from 'react';
 import { useLocation, useParams } from 'react-router-dom';
 import { Canvas } from '@react-three/fiber';
@@ -20,11 +20,7 @@ function GamePage() {
   const [hostileBuildings, setHostileBuildings] = useState([]);
 
   const maxResources = getMaxResources(friendlyBuildings);
-  const [resources, setResources] = useState({
-    energy: 0,
-    food: 0,
-    steel: 0
-  });
+  const [resources, setResources] = useState(new ResourceSet());
   
   const [buildingTakenSquares, setBuildingTakenSquares] = useState(getBuildingTakenSquares(terrain.concat(friendlyNexus)));
   const [buildingVisibility, setBuildingVisibility] = useState(computeNewBuildingVisibility(friendlyBuildings));

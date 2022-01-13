@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.getMaxResources = exports.getVisibleBuildings = exports.getBuildingTakenSquares = exports.getTerrain = exports.player2Nexus = exports.player1Nexus = exports.GRID_SIZE = exports.buildConflict = exports.computeNewBuildingVisibility = exports.idToLoc = exports.locToId = exports.BuildingType = exports.Building = void 0;
+exports.getMaxResources = exports.getVisibleBuildings = exports.getBuildingTakenSquares = exports.getTerrain = exports.player2Nexus = exports.player1Nexus = exports.GRID_SIZE = exports.buildConflict = exports.computeNewBuildingVisibility = exports.idToLoc = exports.locToId = exports.BuildingType = exports.ResourceSet = exports.Building = void 0;
 class Building {
     constructor(position, type) {
         this.position = position;
@@ -8,6 +8,14 @@ class Building {
     }
 }
 exports.Building = Building;
+class ResourceSet {
+    constructor(food = 0, steel = 0, energy = 0) {
+        this.food = food;
+        this.steel = steel;
+        this.energy = energy;
+    }
+}
+exports.ResourceSet = ResourceSet;
 var BuildingType;
 (function (BuildingType) {
     BuildingType["NEXUS"] = "nexus";
