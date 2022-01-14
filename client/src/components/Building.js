@@ -13,8 +13,10 @@ export const BuildingType = {
 };
 
 const LIGHT_BUILDING_COLOR = '#527aff';
+const LIGHT_CONSTRUCTING_COLOR = '#a8bdff';
 const LIGHT_AREA_COLOR = '#376e18';
 const DARK_BUILDING_COLOR = '#992020';
+const DARK_CONSTRUCTING_COLOR = '#d47979';
 const DARK_AREA_COLOR = '#555555';
 const PENDING_BUILDING_COLOR = '#bbbbbb';
 const CONFLICT_COLOR = '#ff0000';
@@ -26,7 +28,7 @@ const TERRAIN_COLOR = '#333333';
  * @param {BuildingType} type: enum describing type of building
  * @returns 
  */
-export default function Building({ type, position = [0,0,0], friendly = true, pending = null, showArea, conflict = false }) {
+export default function Building({ type, position = [0,0,0], completionTime, friendly = true, pending = null, showArea, conflict = false }) {
   const mesh = useRef();
 
   useFrame(() => {
@@ -38,7 +40,11 @@ export default function Building({ type, position = [0,0,0], friendly = true, pe
 
   const areaColor = conflict ? CONFLICT_COLOR : pending ? PENDING_BUILDING_COLOR : friendly ? LIGHT_AREA_COLOR : DARK_AREA_COLOR;
   const areaZ = pending ? 0.02 : 0.01;
-  const buildingColor = pending ? PENDING_BUILDING_COLOR : friendly ? LIGHT_BUILDING_COLOR : DARK_BUILDING_COLOR;
+  const buildingColor = pending 
+    ? PENDING_BUILDING_COLOR 
+    : friendly 
+      ? completionTime ? LIGHT_CONSTRUCTING_COLOR : LIGHT_BUILDING_COLOR
+      : completionTime ? DARK_CONSTRUCTING_COLOR : DARK_BUILDING_COLOR;
 
   switch(type) {
     case BuildingType.NEXUS:

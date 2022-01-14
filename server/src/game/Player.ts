@@ -45,10 +45,10 @@ export default class Player {
       this.visibility = computeNewBuildingVisibility(this.buildings);
     } else if (!game.player2) {
       game.player2 = this;
-      this.buildings = [new Building([44, 44], BuildingType.NEXUS, this)];
+      this.buildings = [new Building([44, 44], BuildingType.NEXUS, this, true)];
       this.visibility = computeNewBuildingVisibility(this.buildings);
 
-      game.player1.buildings = [new Building([4, 4], BuildingType.NEXUS, game.player1)];
+      game.player1.buildings = [new Building([4, 4], BuildingType.NEXUS, game.player1, true)];
       game.player1.visibility = computeNewBuildingVisibility(game.player1.buildings);
 
       // Initialize building taken squares

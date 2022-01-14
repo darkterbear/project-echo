@@ -1,7 +1,8 @@
 export declare class Building {
     position: [number, number];
     type: BuildingType;
-    constructor(position: [number, number], type: BuildingType);
+    completionTime?: number;
+    constructor(position: [number, number], type: BuildingType, complete?: boolean);
 }
 export declare enum BuildingType {
     NEXUS = "nexus",
@@ -45,4 +46,5 @@ export declare const getBuildingTakenSquares: (buildings: Building[]) => Map<num
  * @returns Array of buildings that are at least partially visible in visibility and are part of buildings
  */
 export declare const getVisibleBuildings: (buildings: Building[], visibility: Set<number>, takenSquares: Map<number, Building>) => Set<Building>;
+export declare const getBuildingTime: (type: BuildingType) => number;
 export declare const getMaxResources: (buildings: Building[]) => ResourceSet;

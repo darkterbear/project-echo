@@ -1,10 +1,13 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.getMaxResources = exports.getVisibleBuildings = exports.getBuildingTakenSquares = exports.getTerrain = exports.player2Nexus = exports.player1Nexus = exports.GRID_SIZE = exports.buildConflict = exports.sufficientResources = exports.computeNewBuildingVisibility = exports.idToLoc = exports.locToId = exports.ResourceSet = exports.BuildingType = exports.Building = void 0;
+exports.getMaxResources = exports.getBuildingTime = exports.getVisibleBuildings = exports.getBuildingTakenSquares = exports.getTerrain = exports.player2Nexus = exports.player1Nexus = exports.GRID_SIZE = exports.buildConflict = exports.sufficientResources = exports.computeNewBuildingVisibility = exports.idToLoc = exports.locToId = exports.ResourceSet = exports.BuildingType = exports.Building = void 0;
 class Building {
-    constructor(position, type) {
+    constructor(position, type, complete) {
         this.position = position;
         this.type = type;
+        if (!complete) {
+            this.completionTime = Date.now() + (0, exports.getBuildingTime)(type);
+        }
     }
 }
 exports.Building = Building;
@@ -148,23 +151,23 @@ const buildConflict = (takenSquares, visibility, hoverLocation, type) => {
 };
 exports.buildConflict = buildConflict;
 exports.GRID_SIZE = 49;
-exports.player1Nexus = new Building([4, 4], BuildingType.NEXUS);
-exports.player2Nexus = new Building([44, 44], BuildingType.NEXUS);
+exports.player1Nexus = new Building([4, 4], BuildingType.NEXUS, true);
+exports.player2Nexus = new Building([44, 44], BuildingType.NEXUS, true);
 const getTerrain = () => [
-    new Building([9, 24], BuildingType.TERRAIN),
-    new Building([12, 24], BuildingType.TERRAIN),
-    new Building([15, 24], BuildingType.TERRAIN),
-    new Building([33, 24], BuildingType.TERRAIN),
-    new Building([36, 24], BuildingType.TERRAIN),
-    new Building([39, 24], BuildingType.TERRAIN),
-    new Building([24, 9], BuildingType.TERRAIN),
-    new Building([24, 12], BuildingType.TERRAIN),
-    new Building([24, 15], BuildingType.TERRAIN),
-    new Building([24, 33], BuildingType.TERRAIN),
-    new Building([24, 36], BuildingType.TERRAIN),
-    new Building([24, 39], BuildingType.TERRAIN),
-    new Building([21, 27], BuildingType.TERRAIN),
-    new Building([27, 21], BuildingType.TERRAIN),
+    new Building([9, 24], BuildingType.TERRAIN, true),
+    new Building([12, 24], BuildingType.TERRAIN, true),
+    new Building([15, 24], BuildingType.TERRAIN, true),
+    new Building([33, 24], BuildingType.TERRAIN, true),
+    new Building([36, 24], BuildingType.TERRAIN, true),
+    new Building([39, 24], BuildingType.TERRAIN, true),
+    new Building([24, 9], BuildingType.TERRAIN, true),
+    new Building([24, 12], BuildingType.TERRAIN, true),
+    new Building([24, 15], BuildingType.TERRAIN, true),
+    new Building([24, 33], BuildingType.TERRAIN, true),
+    new Building([24, 36], BuildingType.TERRAIN, true),
+    new Building([24, 39], BuildingType.TERRAIN, true),
+    new Building([21, 27], BuildingType.TERRAIN, true),
+    new Building([27, 21], BuildingType.TERRAIN, true),
 ];
 exports.getTerrain = getTerrain;
 /**
@@ -221,9 +224,13 @@ const getVisibleBuildings = (buildings, visibility, takenSquares) => {
     return visibleBuildings;
 };
 exports.getVisibleBuildings = getVisibleBuildings;
+const getBuildingTime = (type) => {
+    return 5000;
+};
+exports.getBuildingTime = getBuildingTime;
 const getMaxResources = (buildings) => {
     const max = new ResourceSet();
-    for (const b of buildings) {
+    for (const b of buildings.filter(b => !b.completionTime)) {
         switch (b.type) {
             case BuildingType.NEXUS:
                 max.energy += 10;

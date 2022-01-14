@@ -2,7 +2,6 @@ import { randomId } from '../util';
 import { Building as BaseBuilding, BuildingType, getTerrain, buildConflict, computeNewBuildingVisibility, getVisibleBuildings, getBuildingTakenSquares, sufficientResources, ResourceSet } from 'echo';
 import Building from './Building';
 import Player from './Player';
-import sockets from 'sockets';
 
 export default class Game {
   id: string;
@@ -42,7 +41,7 @@ export default class Game {
     this.id = Game.generateId();
     this.player1 = null;
     this.player2 = null;
-    this.terrain = getTerrain();
+    this.terrain = getTerrain().map(b => new Building(b.position, b.type));
     this.buildingTakenSquares = new Map();
 
     Game.games.set(this.id, this);
@@ -58,12 +57,13 @@ export default class Game {
       throw new Error('Insufficient resources');
     }
 
-    // Add the building
-    const building = new Building(position, type, player);
-    player.buildings.push(building);
+    // Start constructing the building
     player.resources.deduct(ResourceSet.BUILDING_COSTS[type]);
     player.socket.emit('update_resources', player.resources);
 
+    const building = new Building(position, type, player);
+    player.buildings.push(building);
+    
     // Update building taken squares
     for (const entry of getBuildingTakenSquares([building])) {
       this.buildingTakenSquares.set(entry[0], entry[1]);

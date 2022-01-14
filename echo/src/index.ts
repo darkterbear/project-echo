@@ -1,10 +1,14 @@
 export class Building {
   position: [number, number];
   type: BuildingType;
+  completionTime?: number; // If not null, the building is current in construction to complete at the given time (ms epoch).
 
-  constructor(position: [number, number], type: BuildingType) {
+  constructor(position: [number, number], type: BuildingType, complete?: boolean) {
     this.position = position;
     this.type = type;
+    if (!complete) {
+      this.completionTime = Date.now() + getBuildingTime(type);
+    }
   }
 }
 
@@ -162,24 +166,24 @@ export const buildConflict = (takenSquares: Map<number, Building>, visibility: S
 
 export const GRID_SIZE = 49;
 
-export const player1Nexus = new Building([4, 4], BuildingType.NEXUS);
-export const player2Nexus = new Building([44, 44], BuildingType.NEXUS);
+export const player1Nexus = new Building([4, 4], BuildingType.NEXUS, true);
+export const player2Nexus = new Building([44, 44], BuildingType.NEXUS, true);
 
 export const getTerrain = (): Building[] => [
-  new Building([9, 24], BuildingType.TERRAIN),
-  new Building([12, 24], BuildingType.TERRAIN),
-  new Building([15, 24], BuildingType.TERRAIN),
-  new Building([33, 24], BuildingType.TERRAIN),
-  new Building([36, 24], BuildingType.TERRAIN),
-  new Building([39, 24], BuildingType.TERRAIN),
-  new Building([24, 9], BuildingType.TERRAIN),
-  new Building([24, 12], BuildingType.TERRAIN),
-  new Building([24, 15], BuildingType.TERRAIN),
-  new Building([24, 33], BuildingType.TERRAIN),
-  new Building([24, 36], BuildingType.TERRAIN),
-  new Building([24, 39], BuildingType.TERRAIN),
-  new Building([21, 27], BuildingType.TERRAIN),
-  new Building([27, 21], BuildingType.TERRAIN),
+  new Building([9, 24], BuildingType.TERRAIN, true),
+  new Building([12, 24], BuildingType.TERRAIN, true),
+  new Building([15, 24], BuildingType.TERRAIN, true),
+  new Building([33, 24], BuildingType.TERRAIN, true),
+  new Building([36, 24], BuildingType.TERRAIN, true),
+  new Building([39, 24], BuildingType.TERRAIN, true),
+  new Building([24, 9], BuildingType.TERRAIN, true),
+  new Building([24, 12], BuildingType.TERRAIN, true),
+  new Building([24, 15], BuildingType.TERRAIN, true),
+  new Building([24, 33], BuildingType.TERRAIN, true),
+  new Building([24, 36], BuildingType.TERRAIN, true),
+  new Building([24, 39], BuildingType.TERRAIN, true),
+  new Building([21, 27], BuildingType.TERRAIN, true),
+  new Building([27, 21], BuildingType.TERRAIN, true),
 ];
 
 /**
@@ -238,10 +242,14 @@ export const getVisibleBuildings = (buildings: Building[], visibility: Set<numbe
   return visibleBuildings;
 }
 
+export const getBuildingTime = (type: BuildingType): number => {
+  return 5000;
+}
+
 export const getMaxResources = (buildings: Building[]): ResourceSet => {
   const max = new ResourceSet();
 
-  for (const b of buildings) {
+  for (const b of buildings.filter(b => !b.completionTime)) {
     switch(b.type) {
       case BuildingType.NEXUS:
         max.energy += 10;

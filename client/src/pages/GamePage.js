@@ -1,7 +1,7 @@
 import '../css/GamePage.scss';
 import { buildConflict, computeNewBuildingVisibility, getBuildingTakenSquares, getTerrain, GRID_SIZE, locToId, perspectiveNexus, Building, idToLoc, player2Nexus, player1Nexus, getMaxResources, ResourceSet, sufficientResources } from 'echo';
-import React, { useCallback, useEffect, useState } from 'react';
-import { useLocation, useParams } from 'react-router-dom';
+import React, { useEffect, useState } from 'react';
+import { useLocation } from 'react-router-dom';
 import { Canvas } from '@react-three/fiber';
 import Plane from '../components/Plane';
 import CameraMover from '../components/CameraMover';
@@ -41,6 +41,13 @@ function GamePage() {
     socket.on('update_buildings', ({type, buildings}) => {
       if (type === 'add')
         setHostileBuildings((existing) => existing.concat(buildings));
+    });
+
+    socket.on('building_complete', (position) => {
+      setFriendlyBuildings((existing) => {
+        existing.find((building) => building.position[0] === position[0] && building.position[1] === position[1]).completionTime = null;
+        return existing;
+      });
     });
 
     socket.on('update_resources', (resources) => {
