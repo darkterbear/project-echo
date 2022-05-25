@@ -79,7 +79,11 @@ export default class Game {
     if (newBuildings.length > 0) {
       player.socket.emit('update_buildings', {
         type: 'add',
-        buildings: newBuildings,
+        buildings: newBuildings.map(b => ({
+          position: b.position,
+          type: b.type,
+          completionTime: b.completionTime,
+        })),
       });
     }
 
@@ -87,7 +91,11 @@ export default class Game {
     if (getVisibleBuildings([building], opponent.visibility, this.buildingTakenSquares).size > 0) {
       opponent.socket.emit('update_buildings', {
         type: 'add',
-        buildings: [building],
+        buildings: [{
+          position: building.position,
+          type: building.type,
+          completionTime: building.completionTime,
+        }],
       });
     }
   }

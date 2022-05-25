@@ -71,6 +71,7 @@ export default function routes(app: Application, io: Server): void {
     try {
       game.addBuilding(player, position, type);
     } catch (e) {
+      console.log(e);
       return res.status(400).end();
     }
 
