@@ -45,7 +45,14 @@ function GamePage() {
 
     socket.on('building_complete', (position) => {
       setFriendlyBuildings((existing) => {
-        existing.find((building) => building.position[0] === position[0] && building.position[1] === position[1]).completionTime = null;
+        const targetBuilding = existing.find((building) => building.position[0] === position[0] && building.position[1] === position[1])
+        if (targetBuilding) targetBuilding.completionTime = null;
+        return existing;
+      });
+
+      setHostileBuildings((existing) => {
+        const targetBuilding = existing.find((building) => building.position[0] === position[0] && building.position[1] === position[1])
+        if (targetBuilding) targetBuilding.completionTime = null;
         return existing;
       });
     });

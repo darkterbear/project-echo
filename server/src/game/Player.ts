@@ -1,6 +1,6 @@
 import { Socket } from 'socket.io';
 import Game from './Game';
-import { BuildingType, computeNewBuildingVisibility, getBuildingTakenSquares, ResourceSet } from 'echo';
+import { BuildingType, computeNewBuildingVisibility, getBuildingTakenSquares, getVisibleBuildings, ResourceSet } from 'echo';
 import Building from './Building';
 
 export default class Player {
@@ -68,5 +68,9 @@ export default class Player {
 
   delete(): void {
     Player.players.delete(this.id);
+  }
+
+  canSeeOpponentBuilding(building: Building): boolean {
+    return getVisibleBuildings([building], this.visibility, this.game.buildingTakenSquares).size > 0;
   }
 }

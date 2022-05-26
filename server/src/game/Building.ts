@@ -1,4 +1,4 @@
-import { Building as BaseBuilding, BuildingType, getMaxResources } from 'echo';
+import { Building as BaseBuilding, BuildingType, getMaxResources, getVisibleBuildings } from 'echo';
 import Player from './Player';
 
 export default class Building extends BaseBuilding {
@@ -18,6 +18,11 @@ export default class Building extends BaseBuilding {
         this.completionTimer = setTimeout(() => {
           this.completionTime = null;
           this.owner.socket.emit('building_complete', this.position);
+
+          // If opponent can see this building, send complete to them as well
+          if (this.owner.opponent().canSeeOpponentBuilding(this)) {
+            this.owner.opponent().socket.emit('building_complete', this.position);
+          }
           this.beginResourceInterval();
         }, this.completionTime - Date.now());
       } else {
